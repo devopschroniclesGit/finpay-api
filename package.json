@@ -1,0 +1,20 @@
+{
+  "name": "finpay-api",
+  "version": "1.0.0",
+  "description": "Production-style fintech payment API — auth, wallets, transfers, rate limiting, caching, idempotency",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:seed": "node prisma/seed.js"
+  },
+  "keywords": ["fintech", "api", "payments", "nodejs", "express", "prisma"],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
