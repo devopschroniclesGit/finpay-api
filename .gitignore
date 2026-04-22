@@ -20,3 +20,5 @@ build/
 # Prisma generated (regenerated on npm install)
 # Note: keep schema.prisma committed, NOT the generated client
 node_modules/.prisma/
+
+/src/generated/prisma
