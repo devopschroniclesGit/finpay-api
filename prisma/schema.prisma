@@ -1,13 +1,82 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  account   Account?
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  balance   Decimal  @default(0.00) @db.Decimal(18, 2)
+  currency  String   @default("ZAR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User          @relation(fields: [userId], references: [id])
+  sentTx     Transaction[] @relation("sender")
+  receivedTx Transaction[] @relation("receiver")
+
+  @@map("accounts")
+}
+
+model Transaction {
+  id             String            @id @default(uuid())
+  idempotencyKey String?           @unique
+  senderId       String
+  receiverId     String
+  amount         Decimal           @db.Decimal(18, 2)
+  currency       String            @default("ZAR")
+  status         TransactionStatus @default(PENDING)
+  description    String?
+  metadata       Json?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  sender   Account @relation("sender",   fields: [senderId],   references: [id])
+  receiver Account @relation("receiver", fields: [receiverId], references: [id])
+
+  @@map("transactions")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  oldData   Json?
+  newData   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
 }
