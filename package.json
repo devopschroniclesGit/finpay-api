@@ -11,6 +11,9 @@
     "db:studio": "npx prisma studio",
     "db:seed": "node prisma/seed.js"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "keywords": [
     "fintech",
     "api",
