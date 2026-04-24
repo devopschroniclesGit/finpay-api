@@ -1,15 +1,21 @@
 const Redis = require('ioredis');
 const logger = require('./logger');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+
+// Upstash requires TLS — detected by rediss:// scheme
+const isTLS = redisUrl.startsWith('rediss://');
+
+const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 3,
   enableReadyCheck: true,
   connectTimeout: 10000,
+  tls: isTLS ? { rejectUnauthorized: false } : undefined,
 
   retryStrategy(times) {
     if (times > 3) {
       logger.error('Redis connection failed after 3 retries — giving up');
-      return null; // stop retrying
+      return null;
     }
     const delay = Math.min(times * 200, 2000);
     logger.warn(`Redis retry attempt ${times} — waiting ${delay}ms`);
@@ -17,23 +23,11 @@ const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
   },
 });
 
-redis.on('connect', () => {
-  logger.info('Redis connection established');
-});
+redis.on('connect', () => logger.info('Redis connection established'));
+redis.on('ready', () => logger.info('Redis ready to accept commands'));
+redis.on('error', (err) => logger.error('Redis error', { message: err.message }));
+redis.on('close', () => logger.warn('Redis connection closed'));
 
-redis.on('ready', () => {
-  logger.info('Redis ready to accept commands');
-});
-
-redis.on('error', (err) => {
-  logger.error('Redis error', { message: err.message });
-});
-
-redis.on('close', () => {
-  logger.warn('Redis connection closed');
-});
-
-// Graceful shutdown helper
 const disconnectRedis = async () => {
   await redis.quit();
   logger.info('Redis disconnected gracefully');
