@@ -1,29 +1,28 @@
-const Redis = require('ioredis');
+const { Redis } = require('@upstash/redis');
 const logger = require('./logger');
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-const isTLS = redisUrl.startsWith('rediss://');
+let redis;
 
-const redis = new Redis(redisUrl, {
-  tls: isTLS ? { rejectUnauthorized: false } : undefined,
-  maxRetriesPerRequest: 3,
-  enableReadyCheck: true,
-  connectTimeout: 20000,
-  keepAlive: 5000,
-  // Reconnect forever — Upstash closes idle connections, this brings it back
-  retryStrategy(times) {
-    return Math.min(times * 300, 3000);
-  },
-});
-
-redis.on('connect', () => logger.info('Redis connection established'));
-redis.on('ready', () => logger.info('Redis ready to accept commands'));
-redis.on('error', (err) => logger.error('Redis error', { message: err.message }));
-redis.on('close', () => logger.warn('Redis connection closed'));
-redis.on('reconnecting', () => logger.info('Redis reconnecting...'));
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  // Production — Upstash HTTP client (no persistent connection)
+  redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+  logger.info('Redis configured via Upstash REST API');
+} else {
+  // Local development — standard ioredis
+  const IORedis = require('ioredis');
+  redis = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+    maxRetriesPerRequest: 3,
+    retryStrategy: (times) => Math.min(times * 200, 2000),
+  });
+  redis.on('connect', () => logger.info('Redis connection established'));
+  redis.on('error', (err) => logger.error('Redis error', { message: err.message }));
+}
 
 const disconnectRedis = async () => {
-  try { await redis.quit(); } catch (_) { redis.disconnect(); }
+  if (redis.quit) await redis.quit().catch(() => {});
   logger.info('Redis disconnected');
 };
 

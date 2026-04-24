@@ -42,11 +42,7 @@ const idempotencyCheck = async (req, res, next) => {
       // Only cache successful responses — don't cache errors
       if (res.statusCode < 400) {
         try {
-          await redis.setex(
-            redisKey,
-            IDEMPOTENCY_TTL_SECONDS,
-            JSON.stringify({ statusCode: res.statusCode, body })
-          );
+	  await redis.set(redisKey, JSON.stringify(...), { ex: IDEMPOTENCY_TTL_SECONDS });		
           logger.debug('Idempotency key stored', {
             userId: req.user.id,
             key,

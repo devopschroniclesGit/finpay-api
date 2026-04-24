@@ -31,7 +31,7 @@ const cache = (ttlSeconds = 60) => async (req, res, next) => {
     res.json = async (body) => {
       if (res.statusCode === 200) {
         try {
-          await redis.setex(key, ttlSeconds, JSON.stringify(body));
+	  await redis.set(key, JSON.stringify(body), { ex: ttlSeconds });
           logger.debug('Response cached', { key, ttl: ttlSeconds });
         } catch (cacheErr) {
           logger.error('Failed to cache response', { error: cacheErr.message });
