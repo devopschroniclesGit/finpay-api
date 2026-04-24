@@ -5,7 +5,14 @@ const logger = require('../config/logger');
 
 // Shared Redis store factory
 const makeStore = (prefix) => new RedisStore({
-  sendCommand: (...args) => redis.call(...args),
+  sendCommand: async (...args) => {
+    try {
+      return await redis.call(...args);
+    } catch (err) {
+      logger.warn('Rate limit Redis unavailable — skipping', { error: err.message });
+      throw err;
+    }
+  },
   prefix: `rl:${prefix}:`,
 });
 
@@ -26,9 +33,10 @@ const onLimitReached = (req, res, options) => {
 const apiLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
-  standardHeaders: true,   // Return RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
   store: makeStore('api'),
+  skip: () => redis.status !== 'ready',  // ← add this line
   handler: (req, res, next, options) => {
     onLimitReached(req, res, options);
     res.status(429).json({
