@@ -58,10 +58,15 @@ process.on('SIGINT', () => shutdown('SIGINT'));   // Ctrl+C in terminal
 // Catch unhandled promise rejections — log and exit
 // Continuing after an unhandled rejection is unsafe
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled promise rejection', {
-    reason: reason?.message || reason,
-    promise,
-  });
+  const message = reason?.message || String(reason);
+
+  // Redis connection failures are non-fatal — server continues without cache
+  if (message.includes('Connection is closed') || message.includes('Redis')) {
+    logger.warn('Redis unhandled rejection — continuing without cache', { message });
+    return;
+  }
+
+  logger.error('Unhandled promise rejection', { reason: message });
   process.exit(1);
 });
 
