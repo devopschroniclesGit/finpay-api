@@ -75,6 +75,7 @@ jobs:
       - name: Seed database
         run: npx prisma db seed || echo "Seed had warnings — continuing"
 
+
       # ── Start server ──────────────────────────────────────────────────────────
       - name: Start server
         run: node src/server.js &
