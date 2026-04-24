@@ -12,6 +12,8 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 const logger = require('./config/logger');
 
 const app = express();
+// Trust Railway's proxy — required for rate limiting and IP detection
+app.set('trust proxy', 1);
 
 // ── Security ──────────────────────────────────────────────────────────────────
 
