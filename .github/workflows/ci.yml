@@ -1,0 +1,159 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']        # every branch
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test & Build
+    runs-on: ubuntu-latest
+
+    services:
+      # PostgreSQL service container — available at localhost:5432
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: finpay_db
+          POSTGRES_USER: finpay_user
+          POSTGRES_PASSWORD: finpay_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      # Redis service container — available at localhost:6379
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      PORT: 3000
+      DATABASE_URL: postgresql://finpay_user:finpay_password@localhost:5432/finpay_db
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: ci-test-secret-not-used-in-production
+      JWT_EXPIRES_IN: 7d
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX_REQUESTS: 1000
+
+    steps:
+      # ── Checkout ─────────────────────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Node.js setup ────────────────────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── Install dependencies ──────────────────────────────────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      # ── Database setup ────────────────────────────────────────────────────────
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Seed database
+        run: npx prisma db seed
+
+      # ── Start server ──────────────────────────────────────────────────────────
+      - name: Start server
+        run: node src/server.js &
+        # & runs it in the background — CI continues while server starts
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:3000/api/v1/health > /dev/null; then
+              echo "✅ Server is ready"
+              break
+            fi
+            echo "Attempt $i/15 — waiting 2s..."
+            sleep 2
+          done
+
+      # ── Health check ──────────────────────────────────────────────────────────
+      - name: Health check
+        run: |
+          RESPONSE=$(curl -sf http://localhost:3000/api/v1/health)
+          echo "Health response: $RESPONSE"
+          echo $RESPONSE | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          assert data['success'] == True, 'success must be true'
+          assert data['status'] == 'healthy', 'status must be healthy'
+          print('✅ Health check passed')
+          "
+
+      # ── Smoke tests ───────────────────────────────────────────────────────────
+      - name: Smoke test — register endpoint
+        run: |
+          RESPONSE=$(curl -sf -X POST http://localhost:3000/api/v1/auth/register \
+            -H "Content-Type: application/json" \
+            -d '{"email":"ci-test@finpay.dev","password":"SecurePass123","firstName":"CI","lastName":"Test"}')
+          echo "Register response: $RESPONSE"
+          echo $RESPONSE | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          assert data['success'] == True, 'register must succeed'
+          assert 'token' in data['data'], 'token must be present'
+          print('✅ Register smoke test passed')
+          "
+
+      - name: Smoke test — login endpoint
+        run: |
+          RESPONSE=$(curl -sf -X POST http://localhost:3000/api/v1/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"alice@finpay.dev","password":"SecurePass123"}')
+          echo "Login response: $RESPONSE"
+          echo $RESPONSE | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          assert data['success'] == True, 'login must succeed'
+          assert 'token' in data['data'], 'token must be present'
+          print('✅ Login smoke test passed')
+          "
+
+      - name: Smoke test — protected endpoint requires auth
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            http://localhost:3000/api/v1/accounts/me)
+          echo "Protected endpoint status: $RESPONSE"
+          [ "$RESPONSE" = "401" ] && echo "✅ Auth protection working" || \
+            (echo "❌ Expected 401 got $RESPONSE" && exit 1)
+
+      - name: Smoke test — 404 for unknown routes
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            http://localhost:3000/api/v1/does-not-exist)
+          echo "404 status: $RESPONSE"
+          [ "$RESPONSE" = "404" ] && echo "✅ 404 handler working" || \
+            (echo "❌ Expected 404 got $RESPONSE" && exit 1)
+
+      # ── Docker build ──────────────────────────────────────────────────────────
+      - name: Build Docker image
+        run: docker build -t finpay-api:${{ github.sha }} .
+
+      - name: Confirm Docker image built
+        run: |
+          docker images finpay-api
+          echo "✅ Docker image built successfully"
