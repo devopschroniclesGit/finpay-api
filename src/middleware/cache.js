@@ -8,11 +8,11 @@ const logger = require('../config/logger');
  *   router.get('/account', authenticate, cache(30), handler)
  *   └── caches the response for 30 seconds, keyed by URL + userId
  *
- * Cache is automatically invalidated by TTL — no manual busting needed
- * for read-heavy endpoints like balance and transaction history.
+ * Cache is scoped per user — user A never sees user B's cached data.
+ * Automatically falls through if Redis is unavailable.
  */
 const cache = (ttlSeconds = 60) => async (req, res, next) => {
-  // Cache key is scoped to the user — user A never sees user B's data
+  // Scope cache key to the user — prevents cross-user data leakage
   const key = `cache:${req.originalUrl}:${req.user?.id || 'public'}`;
 
   try {
@@ -25,15 +25,17 @@ const cache = (ttlSeconds = 60) => async (req, res, next) => {
 
     logger.debug('Cache miss', { key, url: req.originalUrl });
 
-    // Intercept res.json to cache the response after it's sent
+    // Intercept res.json to cache the response after it is sent
     const originalJson = res.json.bind(res);
 
     res.json = async (body) => {
+      // Only cache successful responses
       if (res.statusCode === 200) {
         try {
-	  await redis.set(key, JSON.stringify(body), { ex: ttlSeconds });
+          await redis.set(key, JSON.stringify(body), { ex: ttlSeconds });
           logger.debug('Response cached', { key, ttl: ttlSeconds });
         } catch (cacheErr) {
+          // Log but never fail the request if caching fails
           logger.error('Failed to cache response', { error: cacheErr.message });
         }
       }
@@ -42,7 +44,7 @@ const cache = (ttlSeconds = 60) => async (req, res, next) => {
 
     next();
   } catch (err) {
-    // If Redis is down, skip caching and serve the request normally
+    // If Redis is completely unavailable, serve the request uncached
     logger.error('Cache middleware error — serving uncached', { error: err.message });
     next();
   }
