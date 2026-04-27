@@ -5,15 +5,17 @@ Inspired by the backend architecture of Stripe, PayFast, and Yoco.
 
 ---
 
-## Architecture
+## System Architecture
 
-![System Architecture](./docs/architecture.svg)
+![System Architecture](./architecture.svg)
 
-The request pipeline flows through a layered middleware stack before reaching any business logic. Every inbound HTTP request passes through JWT authentication, a Redis-backed rate limiter, and an idempotency check before the route handler is invoked. A cache lookup follows — if the response is already stored in Redis, the request returns early without touching the database. Only uncached requests continue to the service layer, which issues atomic Prisma queries against PostgreSQL. Winston captures structured logs at every layer.
+Every inbound HTTP request passes through a layered middleware pipeline before reaching business logic. JWT authentication runs first, followed by a Redis-backed rate limiter, then an idempotency check. A cache lookup follows — if the response exists in Redis the request returns early without touching the database. Only uncached requests continue to the service layer, which issues atomic Prisma queries against PostgreSQL. Winston captures structured logs at every layer.
 
-![Data Model](./docs/data-model.svg)
+## Data Model
 
-The schema is built around four core tables: `users`, `accounts`, `transactions`, and `audit_logs`. Each user owns exactly one account. Transactions carry both a `senderId` and a `receiverId` foreign key into the accounts table, and are written inside a Prisma `$transaction` block so that the debit and credit are always atomic. Idempotency keys are stored in both Redis (for sub-millisecond lookup with a TTL) and the database (for durable audit purposes).
+![Data Model](./data-model.svg)
+
+The schema is built around four core tables: `users`, `accounts`, `transactions`, and `audit_logs`. Each user owns exactly one account. Transactions carry both a `senderId` and a `receiverId` foreign key into the accounts table and are written inside a Prisma `$transaction` block so the debit and credit are always atomic. Idempotency keys are stored in both Redis (for sub-millisecond lookup with a TTL) and the database (for durable audit purposes).
 
 ---
 
@@ -89,11 +91,17 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 ```
 
+Generate a secure JWT secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
 ---
 
 ## API Overview
 
-| Method | Endpoint | Description | Auth |
+| Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
 | POST | `/api/v1/auth/register` | Create user and wallet account | No |
 | POST | `/api/v1/auth/login` | Authenticate and receive JWT | No |
@@ -102,7 +110,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 | GET | `/api/v1/transactions` | List transaction history | Yes |
 | GET | `/api/v1/health` | Service health check | No |
 
-Full request and response schemas are documented in the Swagger UI.
+Full request and response schemas are in the Swagger UI at `/api/docs`.
 
 ---
 
@@ -112,10 +120,10 @@ Full request and response schemas are documented in the Swagger UI.
 Fintech systems cannot afford duplicate charges. The `X-Idempotency-Key` header is checked in middleware before any handler runs. If the key exists in Redis, the cached response is returned immediately. New keys are written to both Redis (TTL-expiring) and PostgreSQL (durable record). This is the same pattern used by Stripe.
 
 **Atomic Transfers**
-Money transfers use Prisma's `$transaction` block. The sender debit and receiver credit are issued as a single database transaction. If either operation fails, both roll back, ensuring no state where value leaves one account without arriving in another.
+Money transfers use Prisma's `$transaction` block. The sender debit and receiver credit are issued as a single database transaction. If either operation fails, both roll back — no state where value leaves one account without arriving in another.
 
 **Rate Limiting**
-Three separate rate limiters are configured. A global limiter applies to all `/api` routes. A tighter limiter is applied to auth endpoints to prevent brute-force attacks. A separate limiter covers transaction endpoints. All counters are stored in Redis so they remain accurate across multiple server instances.
+Three separate rate limiters are configured: a global limiter on all `/api` routes, a tighter limiter on auth endpoints to prevent brute-force, and a separate limiter on transaction endpoints. All counters are stored in Redis so they remain accurate across multiple server instances.
 
 ---
 
@@ -129,7 +137,7 @@ finpay-api/
 ├── src/
 │   ├── config/          database, redis, logger
 │   ├── controllers/     HTTP request and response handling
-│   ├── middleware/       auth, rate limiter, idempotency, error handler
+│   ├── middleware/      auth, rate limiter, idempotency, error handler
 │   ├── routes/          URL routing
 │   ├── services/        business logic
 │   ├── utils/           response formatter, helpers
@@ -138,10 +146,13 @@ finpay-api/
 │   └── server.js        server entry point
 ├── docs/
 │   ├── architecture.svg
-│   └── data-model.svg
+│   ├── data-model.svg
+│   ├── git-workflow.svg
+│   └── docker-infrastructure.svg
 ├── docker-compose.yml
 ├── .env.example
-└── package.json
+├── README.md
+└── SETUP.md
 ```
 
 ---
@@ -156,6 +167,12 @@ The seed script creates two demo accounts:
 | bob@finpay.dev | password123 | ZAR 5,000.00 |
 
 Run with `npx prisma db seed`.
+
+---
+
+## Build Guide
+
+Step-by-step setup covering Phases 1-3 (scaffolding, dependencies, Docker, and database) is in [SETUP.md](./SETUP.md).
 
 ---
 
