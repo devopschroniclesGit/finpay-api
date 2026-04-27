@@ -1,0 +1,78 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="400" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — DOCKER INFRASTRUCTURE (PHASE 3)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Host machine wrapper -->
+  <rect x="36" y="56" width="828" height="286" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="54" y="74" fill="#30363d" font-size="9" letter-spacing="1">HOST MACHINE (Oracle VM / iMac)</text>
+
+  <!-- docker-compose network -->
+  <rect x="56" y="82" width="788" height="246" rx="8" fill="#0d1117" stroke="#4ade80" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="74" y="98" fill="#4ade80" font-size="9" letter-spacing="1">finpay-api_default network (Docker Compose)</text>
+
+  <!-- ─── POSTGRES CONTAINER ─── -->
+  <rect x="80" y="108" width="310" height="196" rx="8" fill="#161b22" stroke="#4ade80" stroke-width="1.5"/>
+  <rect x="80" y="108" width="310" height="28" rx="8" fill="#1a3a2a"/>
+  <rect x="80" y="128" width="310" height="8" fill="#1a3a2a"/>
+  <text x="235" y="127" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="bold">finpay_postgres</text>
+  <line x1="80" y1="136" x2="390" y2="136" stroke="#4ade80" stroke-width="0.8"/>
+
+  <text x="96" y="153" fill="#8b949e" font-size="9">Image</text><text x="376" y="153" text-anchor="end" fill="#e6edf3" font-size="9">postgres:15-alpine</text>
+  <text x="96" y="169" fill="#8b949e" font-size="9">Port</text><text x="376" y="169" text-anchor="end" fill="#4ade80" font-size="9">0.0.0.0:5432 → 5432</text>
+  <text x="96" y="185" fill="#8b949e" font-size="9">Restart</text><text x="376" y="185" text-anchor="end" fill="#e6edf3" font-size="9">unless-stopped</text>
+  <text x="96" y="201" fill="#8b949e" font-size="9">Volume</text><text x="376" y="201" text-anchor="end" fill="#e6edf3" font-size="9">postgres_data:/var/lib/postgresql</text>
+  <line x1="80" y1="211" x2="390" y2="211" stroke="#30363d" stroke-width="0.8"/>
+  <text x="96" y="226" fill="#8b949e" font-size="9">POSTGRES_DB</text><text x="376" y="226" text-anchor="end" fill="#fbbf24" font-size="9">finpay_db</text>
+  <text x="96" y="242" fill="#8b949e" font-size="9">POSTGRES_USER</text><text x="376" y="242" text-anchor="end" fill="#fbbf24" font-size="9">finpay_user</text>
+  <text x="96" y="258" fill="#8b949e" font-size="9">POSTGRES_PASSWORD</text><text x="376" y="258" text-anchor="end" fill="#fbbf24" font-size="9">finpay_password</text>
+  <line x1="80" y1="268" x2="390" y2="268" stroke="#30363d" stroke-width="0.8"/>
+  <text x="96" y="284" fill="#8b949e" font-size="9">Healthcheck</text><text x="376" y="284" text-anchor="end" fill="#4ade80" font-size="9">pg_isready -U finpay_user</text>
+  <text x="96" y="298" fill="#8b949e" font-size="9">Tables</text><text x="376" y="298" text-anchor="end" fill="#e6edf3" font-size="9">users · accounts · transactions · audit_logs</text>
+
+  <!-- ─── REDIS CONTAINER ─── -->
+  <rect x="510" y="108" width="310" height="196" rx="8" fill="#161b22" stroke="#fbbf24" stroke-width="1.5"/>
+  <rect x="510" y="108" width="310" height="28" rx="8" fill="#2a2010"/>
+  <rect x="510" y="128" width="310" height="8" fill="#2a2010"/>
+  <text x="665" y="127" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold">finpay_redis</text>
+  <line x1="510" y1="136" x2="820" y2="136" stroke="#fbbf24" stroke-width="0.8"/>
+
+  <text x="526" y="153" fill="#8b949e" font-size="9">Image</text><text x="806" y="153" text-anchor="end" fill="#e6edf3" font-size="9">redis:7-alpine</text>
+  <text x="526" y="169" fill="#8b949e" font-size="9">Port</text><text x="806" y="169" text-anchor="end" fill="#fbbf24" font-size="9">0.0.0.0:6379 → 6379</text>
+  <text x="526" y="185" fill="#8b949e" font-size="9">Restart</text><text x="806" y="185" text-anchor="end" fill="#e6edf3" font-size="9">unless-stopped</text>
+  <text x="526" y="201" fill="#8b949e" font-size="9">Volume</text><text x="806" y="201" text-anchor="end" fill="#e6edf3" font-size="9">redis_data:/data</text>
+  <line x1="510" y1="211" x2="820" y2="211" stroke="#30363d" stroke-width="0.8"/>
+  <text x="526" y="226" fill="#8b949e" font-size="9">--appendonly yes</text><text x="806" y="226" text-anchor="end" fill="#e6edf3" font-size="9">AOF persistence</text>
+  <text x="526" y="242" fill="#8b949e" font-size="9">--maxmemory-policy</text><text x="806" y="242" text-anchor="end" fill="#e6edf3" font-size="9">allkeys-lru</text>
+  <text x="526" y="258" fill="#8b949e" font-size="9">--loglevel</text><text x="806" y="258" text-anchor="end" fill="#e6edf3" font-size="9">warning</text>
+  <line x1="510" y1="268" x2="820" y2="268" stroke="#30363d" stroke-width="0.8"/>
+  <text x="526" y="284" fill="#8b949e" font-size="9">Healthcheck</text><text x="806" y="284" text-anchor="end" fill="#fbbf24" font-size="9">redis-cli ping</text>
+  <text x="526" y="298" fill="#8b949e" font-size="9">Used for</text><text x="806" y="298" text-anchor="end" fill="#e6edf3" font-size="9">rate limit · idempotency · cache</text>
+
+  <!-- Connector between containers -->
+  <line x1="390" y1="206" x2="510" y2="206" stroke="#30363d" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="450" y="200" text-anchor="middle" fill="#30363d" font-size="8">internal</text>
+  <text x="450" y="214" text-anchor="middle" fill="#30363d" font-size="8">network</text>
+
+  <!-- App connection labels -->
+  <rect x="300" y="345" width="300" height="38" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="361" text-anchor="middle" fill="#8b949e" font-size="9">Node.js app connects via DATABASE_URL and REDIS_URL</text>
+  <text x="450" y="376" text-anchor="middle" fill="#8b949e" font-size="8.5">defined in .env · gitignored · never committed</text>
+
+  <line x1="235" y1="304" x2="235" y2="323" stroke="#4ade80" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="665" y1="304" x2="665" y2="323" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="235" y1="323" x2="300" y2="345" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="665" y1="323" x2="600" y2="345" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <line x1="80" y1="385" x2="820" y2="385" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="395" text-anchor="middle" fill="#30363d" font-size="8">docker compose up -d    |    docker compose ps    |    docker exec finpay_postgres pg_isready</text>
+</svg>

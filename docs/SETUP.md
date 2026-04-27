@@ -7,7 +7,7 @@ Every phase ends with a real git commit. By the end you will have 3 commits on G
 
 ## Git Commit Flow
 
-![Git Workflow](./git-workflow.svg)
+![Git Workflow](./images/git-workflow.svg)
 
 Three commits, one per phase. Each commit represents one logical unit of work — the same structure professional engineering teams use. The `.env` file is never committed at any point.
 
@@ -227,7 +227,7 @@ Prisma initialised with PostgreSQL datasource"
 
 ### Docker Infrastructure
 
-![Docker Infrastructure](./docker-infrastructure.svg)
+![Docker Infrastructure](./images/docker-infrastructure.svg)
 
 Two containers are provisioned by Docker Compose: `finpay_postgres` on port 5432 and `finpay_redis` on port 6379. Both run on the same internal Docker network and both include healthchecks. The Node.js app connects to them via `DATABASE_URL` and `REDIS_URL` defined in `.env`.
 
