@@ -1,0 +1,98 @@
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-up" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="520" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — SERVICE LAYER (PHASE 7)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">Controllers call services. Services own the logic. Config layer is shared across all three.</text>
+
+  <!-- CONTROLLERS (above) -->
+  <rect x="140" y="72" width="620" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="94" text-anchor="middle" fill="#8b949e" font-size="10">Controllers  (Phase 8)  —  handle HTTP req/res, call services, return responses</text>
+
+  <!-- Down arrows into services -->
+  <line x1="230" y1="106" x2="230" y2="124" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-up)"/>
+  <line x1="450" y1="106" x2="450" y2="124" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-up)"/>
+  <line x1="680" y1="106" x2="680" y2="124" stroke="#8b949e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-up)"/>
+
+  <!-- ─── AUTH SERVICE ─── -->
+  <rect x="44" y="124" width="372" height="222" rx="8" fill="#161b22" stroke="#60a5fa" stroke-width="1.5"/>
+  <rect x="44" y="124" width="372" height="28" rx="8" fill="#10203a"/>
+  <rect x="44" y="144" width="372" height="8" fill="#10203a"/>
+  <text x="230" y="143" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">auth.service.js</text>
+  <line x1="44" y1="152" x2="416" y2="152" stroke="#60a5fa" stroke-width="0.8"/>
+
+  <text x="58" y="170" fill="#60a5fa" font-size="9" font-weight="bold">register(email, password, firstName, lastName)</text>
+  <text x="70" y="184" fill="#8b949e" font-size="8.5">normalise email (lowercase + trim)</text>
+  <text x="70" y="196" fill="#8b949e" font-size="8.5">bcrypt.hash(password, 12)</text>
+  <text x="70" y="208" fill="#8b949e" font-size="8.5">prisma.$transaction → create user + account atomically</text>
+  <text x="70" y="220" fill="#8b949e" font-size="8.5">returns { user, token }</text>
+
+  <line x1="58" y1="228" x2="402" y2="228" stroke="#30363d" stroke-width="0.6"/>
+  <text x="58" y="244" fill="#60a5fa" font-size="9" font-weight="bold">login(email, password)</text>
+  <text x="70" y="258" fill="#8b949e" font-size="8.5">generic error for wrong email AND wrong password</text>
+  <text x="70" y="270" fill="#8b949e" font-size="8.5">bcrypt.compare — timing-safe password check</text>
+  <text x="70" y="282" fill="#8b949e" font-size="8.5">strips passwordHash from returned user object</text>
+
+  <line x1="58" y1="290" x2="402" y2="290" stroke="#30363d" stroke-width="0.6"/>
+  <text x="58" y="306" fill="#60a5fa" font-size="9" font-weight="bold">getProfile(userId)</text>
+  <text x="70" y="320" fill="#8b949e" font-size="8.5">select fields explicitly — no passwordHash ever returned</text>
+  <text x="70" y="334" fill="#8b949e" font-size="8.5">404 if user not found</text>
+
+  <!-- ─── ACCOUNT SERVICE ─── -->
+  <rect x="484" y="124" width="372" height="222" rx="8" fill="#161b22" stroke="#fbbf24" stroke-width="1.5"/>
+  <rect x="484" y="124" width="372" height="28" rx="8" fill="#2a2010"/>
+  <rect x="484" y="144" width="372" height="8" fill="#2a2010"/>
+  <text x="670" y="143" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold">account.service.js</text>
+  <line x1="484" y1="152" x2="856" y2="152" stroke="#fbbf24" stroke-width="0.8"/>
+
+  <text x="498" y="170" fill="#fbbf24" font-size="9" font-weight="bold">getAccount(userId)</text>
+  <text x="510" y="184" fill="#8b949e" font-size="8.5">findUnique by userId, include user name + email</text>
+  <text x="510" y="196" fill="#8b949e" font-size="8.5">converts Decimal → Number for JSON safety</text>
+  <text x="510" y="208" fill="#8b949e" font-size="8.5">returns { ...account, balance: Number }</text>
+  <text x="510" y="220" fill="#8b949e" font-size="8.5">used by account controller + cache middleware</text>
+
+  <line x1="498" y1="228" x2="842" y2="228" stroke="#30363d" stroke-width="0.6"/>
+  <text x="498" y="244" fill="#fbbf24" font-size="9" font-weight="bold">getAccountById(accountId)</text>
+  <text x="510" y="258" fill="#8b949e" font-size="8.5">lightweight internal lookup by account.id</text>
+  <text x="510" y="270" fill="#8b949e" font-size="8.5">used by transaction service only</text>
+  <text x="510" y="282" fill="#8b949e" font-size="8.5">no includes — raw account row</text>
+
+  <line x1="498" y1="290" x2="842" y2="290" stroke="#30363d" stroke-width="0.6"/>
+  <text x="510" y="310" fill="#8b949e" font-size="8">Prisma returns Decimal for balance fields.</text>
+  <text x="510" y="324" fill="#8b949e" font-size="8">All service methods convert to Number before</text>
+  <text x="510" y="338" fill="#8b949e" font-size="8">returning — Decimal objects don't serialise to JSON.</text>
+
+  <!-- ─── TRANSACTION SERVICE ─── -->
+  <rect x="44" y="370" width="812" height="112" rx="8" fill="#161b22" stroke="#4ade80" stroke-width="1.5"/>
+  <rect x="44" y="370" width="812" height="28" rx="8" fill="#1a3a2a"/>
+  <rect x="44" y="390" width="812" height="8" fill="#1a3a2a"/>
+  <text x="450" y="389" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="bold">transaction.service.js</text>
+  <line x1="44" y1="398" x2="856" y2="398" stroke="#4ade80" stroke-width="0.8"/>
+
+  <text x="60" y="415" fill="#4ade80" font-size="9" font-weight="bold">sendMoney(senderId, receiverEmail, amount, description, idempotencyKey)</text>
+  <text x="72" y="430" fill="#8b949e" font-size="8.5">validates amount (gt 0, min R1, max R50k) · fetches accounts · checks self-transfer · checks funds</text>
+  <text x="72" y="444" fill="#8b949e" font-size="8.5">prisma.$transaction: debit → race guard → credit → record  |  atomic rollback on any failure</text>
+
+  <line x1="60" y1="452" x2="844" y2="452" stroke="#30363d" stroke-width="0.6"/>
+
+  <text x="60" y="466" fill="#4ade80" font-size="9" font-weight="bold">getTransactionHistory(userId, { page, limit })</text>
+  <text x="290" y="466" fill="#8b949e" font-size="8.5">         Promise.all([findMany, count]) · direction: SENT/RECEIVED · page clamped 1–100</text>
+
+  <text x="530" y="466" fill="#4ade80" font-size="9" font-weight="bold">getTransaction(txId, userId)</text>
+  <text x="718" y="466" fill="#8b949e" font-size="8.5">  ownership check · 403 if not yours</text>
+
+  <!-- Config layer dependencies -->
+  <rect x="250" y="494" width="400" height="18" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="507" text-anchor="middle" fill="#30363d" font-size="8">All three services import: prisma (database) · logger (Winston)   ·   No service imports another service</text>
+
+  <line x1="80" y1="488" x2="820" y2="488" stroke="#30363d" stroke-width="1"/>
+  <text x="820" y="515" text-anchor="end" fill="#30363d" font-size="8">service-layer.svg</text>
+</svg>

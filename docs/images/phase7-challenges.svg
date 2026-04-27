@@ -1,0 +1,81 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <rect width="900" height="500" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — PHASE 7 ENGINEERING CHALLENGES</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">Design decisions and problems solved in the service layer</text>
+
+  <!-- Timeline spine -->
+  <line x1="140" y1="76" x2="140" y2="468" stroke="#30363d" stroke-width="1.5"/>
+
+  <!-- ─── 1: Decimal vs float ─── -->
+  <circle cx="140" cy="96" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="100" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+  <rect x="166" y="76" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="76" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="92" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="91" fill="#f87171" font-size="9" font-weight="bold">Prisma Decimal objects break JSON serialisation</text>
+  <text x="756" y="91" text-anchor="end" fill="#30363d" font-size="8">design decision: Number() conversion at service boundary</text>
+  <text x="180" y="108" fill="#8b949e" font-size="8.5">Prisma returns Decimal objects for Decimal(18,2) fields. JSON.stringify() converts them to strings, not numbers,</text>
+  <text x="180" y="122" fill="#4ade80" font-size="8.5">Fix: every service method converts balance/amount via Number() before returning. Internal arithmetic uses new Decimal() for precision. Boundary is the service return value.</text>
+
+  <!-- ─── 2: Race condition ─── -->
+  <circle cx="140" cy="166" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="170" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+  <rect x="166" y="146" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="146" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="162" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="161" fill="#f87171" font-size="9" font-weight="bold">Race condition: two concurrent transfers can both pass the balance check</text>
+  <text x="756" y="161" text-anchor="end" fill="#30363d" font-size="8">design decision: post-decrement negative balance guard</text>
+  <text x="180" y="178" fill="#8b949e" font-size="8.5">Two requests for R4,000 on a R5,000 balance could both read balance = 5000, both pass the check, and both execute — resulting in balance -R3,000.</text>
+  <text x="180" y="192" fill="#4ade80" font-size="8.5">Fix: after the debit inside the transaction block, check if updatedBalance &lt; 0. If so, throw — which rolls back the debit automatically. Belt-and-suspenders on top of the pre-check.</text>
+
+  <!-- ─── 3: Account enumeration ─── -->
+  <circle cx="140" cy="236" r="10" fill="#2a2010" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="140" y="240" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="bold">~</text>
+  <rect x="166" y="216" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="216" width="694" height="24" rx="6" fill="#1e1a10"/>
+  <rect x="166" y="232" width="694" height="8" fill="#1e1a10"/>
+  <text x="180" y="231" fill="#fbbf24" font-size="9" font-weight="bold">Account enumeration attack via login error messages</text>
+  <text x="756" y="231" text-anchor="end" fill="#30363d" font-size="8">design decision: unified error message</text>
+  <text x="180" y="248" fill="#8b949e" font-size="8.5">Returning "email not found" vs "wrong password" tells an attacker which emails are registered. They enumerate valid accounts before brute-forcing.</text>
+  <text x="180" y="262" fill="#4ade80" font-size="8.5">Fix: both "user not found" and "wrong password" return the same error: "Invalid email or password". Attacker learns nothing about whether the email exists.</text>
+
+  <!-- ─── 4: Transaction ownership ─── -->
+  <circle cx="140" cy="306" r="10" fill="#2a2010" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="140" y="310" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="bold">~</text>
+  <rect x="166" y="286" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="286" width="694" height="24" rx="6" fill="#1e1a10"/>
+  <rect x="166" y="302" width="694" height="8" fill="#1e1a10"/>
+  <text x="180" y="301" fill="#fbbf24" font-size="9" font-weight="bold">Users must not be able to fetch other users' transaction details</text>
+  <text x="756" y="301" text-anchor="end" fill="#30363d" font-size="8">design decision: ownership check before return</text>
+  <text x="180" y="318" fill="#8b949e" font-size="8.5">Transaction IDs are UUIDs — not sequential. Guessing is hard, but not impossible. A logged-in user could try known IDs.</text>
+  <text x="180" y="332" fill="#4ade80" font-size="8.5">Fix: getTransaction() verifies senderId === account.id OR receiverId === account.id. Returns 403 if neither matches. Record found but not yours.</text>
+
+  <!-- ─── 5: Parallel query ─── -->
+  <circle cx="140" cy="376" r="10" fill="#10203a" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="140" y="380" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="bold">+</text>
+  <rect x="166" y="356" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="356" width="694" height="24" rx="6" fill="#10203a"/>
+  <rect x="166" y="372" width="694" height="8" fill="#10203a"/>
+  <text x="180" y="371" fill="#60a5fa" font-size="9" font-weight="bold">Two sequential DB queries to get paginated list + total count</text>
+  <text x="756" y="371" text-anchor="end" fill="#30363d" font-size="8">optimisation: Promise.all parallel fetch</text>
+  <text x="180" y="388" fill="#8b949e" font-size="8.5">getTransactionHistory needs both the page of records and the total count for pagination. Two awaits in sequence = two round trips to the database.</text>
+  <text x="180" y="402" fill="#4ade80" font-size="8.5">Fix: Promise.all([findMany(...), count(...)]) fires both queries simultaneously. One round trip instead of two. Measurable on large transaction histories.</text>
+
+  <!-- ─── 6: Register atomicity ─── -->
+  <circle cx="140" cy="446" r="10" fill="#10203a" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="140" y="450" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="bold">+</text>
+  <rect x="166" y="426" width="694" height="58" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="426" width="694" height="24" rx="6" fill="#10203a"/>
+  <rect x="166" y="442" width="694" height="8" fill="#10203a"/>
+  <text x="180" y="441" fill="#60a5fa" font-size="9" font-weight="bold">User creation and wallet account creation must always succeed together or not at all</text>
+  <text x="756" y="441" text-anchor="end" fill="#30363d" font-size="8">design decision: register() uses $transaction</text>
+  <text x="180" y="458" fill="#8b949e" font-size="8.5">If user.create succeeds but account.create fails, you have a user with no wallet. They can log in but have no account. A hard-to-debug partial state.</text>
+  <text x="180" y="472" fill="#4ade80" font-size="8.5">Fix: both creates are inside a single $transaction. If account.create fails, user.create rolls back. No orphaned users. No walletless accounts.</text>
+
+  <line x1="80" y1="486" x2="820" y2="486" stroke="#30363d" stroke-width="1"/>
+  <text x="140" y="496" fill="#f87171" font-size="8">red = bug prevented   </text>
+  <text x="280" y="496" fill="#fbbf24" font-size="8">yellow = security concern   </text>
+  <text x="440" y="496" fill="#60a5fa" font-size="8">blue = performance / correctness decision</text>
+  <text x="820" y="496" text-anchor="end" fill="#30363d" font-size="8">phase7-challenges.svg</text>
+</svg>

@@ -1,0 +1,131 @@
+<svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-r" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f87171"/>
+    </marker>
+    <marker id="arrow-y" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="600" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — ATOMIC MONEY TRANSFER (PHASE 7)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">prisma.$transaction() — all four steps succeed together or all roll back together</text>
+
+  <!-- PRE-CHECKS (outside transaction) -->
+  <rect x="44" y="70" width="812" height="100" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="62" y="86" fill="#30363d" font-size="8" letter-spacing="1">PRE-CHECKS (outside transaction block)</text>
+
+  <rect x="62" y="92" width="170" height="64" rx="4" fill="#161b22" stroke="#8b949e" stroke-width="1"/>
+  <text x="147" y="111" text-anchor="middle" fill="#e6edf3" font-size="9" font-weight="bold">Amount validation</text>
+  <text x="147" y="127" text-anchor="middle" fill="#8b949e" font-size="8">gt 0 · min R1.00</text>
+  <text x="147" y="141" text-anchor="middle" fill="#8b949e" font-size="8">max R50,000.00</text>
+
+  <rect x="247" y="92" width="170" height="64" rx="4" fill="#161b22" stroke="#8b949e" stroke-width="1"/>
+  <text x="332" y="111" text-anchor="middle" fill="#e6edf3" font-size="9" font-weight="bold">Fetch sender account</text>
+  <text x="332" y="127" text-anchor="middle" fill="#8b949e" font-size="8">findUnique by userId</text>
+  <text x="332" y="141" text-anchor="middle" fill="#8b949e" font-size="8">404 if not found</text>
+
+  <rect x="432" y="92" width="170" height="64" rx="4" fill="#161b22" stroke="#8b949e" stroke-width="1"/>
+  <text x="517" y="111" text-anchor="middle" fill="#e6edf3" font-size="9" font-weight="bold">Fetch receiver account</text>
+  <text x="517" y="127" text-anchor="middle" fill="#8b949e" font-size="8">by receiverEmail (normalised)</text>
+  <text x="517" y="141" text-anchor="middle" fill="#8b949e" font-size="8">404 if not found</text>
+
+  <rect x="617" y="92" width="218" height="64" rx="4" fill="#161b22" stroke="#8b949e" stroke-width="1"/>
+  <text x="726" y="111" text-anchor="middle" fill="#e6edf3" font-size="9" font-weight="bold">Business rule checks</text>
+  <text x="726" y="127" text-anchor="middle" fill="#8b949e" font-size="8">self-transfer → 400</text>
+  <text x="726" y="141" text-anchor="middle" fill="#8b949e" font-size="8">insufficient funds → 422</text>
+
+  <!-- Arrow into transaction block -->
+  <line x1="450" y1="170" x2="450" y2="192" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="466" y="185" fill="#4ade80" font-size="8">all checks pass</text>
+
+  <!-- TRANSACTION BLOCK -->
+  <rect x="44" y="192" width="812" height="244" rx="8" fill="#0d1117" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="62" y="210" fill="#4ade80" font-size="9" font-weight="bold" letter-spacing="1">prisma.$transaction(async (tx) =&gt; { ... })</text>
+  <text x="820" y="210" text-anchor="end" fill="#4ade80" font-size="8">all-or-nothing</text>
+
+  <!-- Step 1 -->
+  <rect x="64" y="216" width="176" height="74" rx="6" fill="#161b22" stroke="#4ade80" stroke-width="1.2"/>
+  <rect x="64" y="216" width="176" height="22" rx="6" fill="#1a3a2a"/>
+  <rect x="64" y="230" width="176" height="8" fill="#1a3a2a"/>
+  <text x="152" y="230" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="bold">Step 1 — Debit sender</text>
+  <text x="78" y="250" fill="#8b949e" font-size="8">account.update WHERE id</text>
+  <text x="78" y="264" fill="#8b949e" font-size="8">balance: { decrement:</text>
+  <text x="78" y="278" fill="#8b949e" font-size="8">  transferAmount }</text>
+
+  <!-- Step 2 -->
+  <rect x="256" y="216" width="176" height="74" rx="6" fill="#161b22" stroke="#fbbf24" stroke-width="1.2"/>
+  <rect x="256" y="216" width="176" height="22" rx="6" fill="#2a2010"/>
+  <rect x="256" y="230" width="176" height="8" fill="#2a2010"/>
+  <text x="344" y="230" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="bold">Step 2 — Race guard</text>
+  <text x="270" y="250" fill="#8b949e" font-size="8">if updatedBalance &lt; 0:</text>
+  <text x="270" y="264" fill="#8b949e" font-size="8">  throw (triggers full</text>
+  <text x="270" y="278" fill="#8b949e" font-size="8">  rollback of step 1)</text>
+
+  <!-- Step 3 -->
+  <rect x="448" y="216" width="176" height="74" rx="6" fill="#161b22" stroke="#4ade80" stroke-width="1.2"/>
+  <rect x="448" y="216" width="176" height="22" rx="6" fill="#1a3a2a"/>
+  <rect x="448" y="230" width="176" height="8" fill="#1a3a2a"/>
+  <text x="536" y="230" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="bold">Step 3 — Credit receiver</text>
+  <text x="462" y="250" fill="#8b949e" font-size="8">account.update WHERE id</text>
+  <text x="462" y="264" fill="#8b949e" font-size="8">balance: { increment:</text>
+  <text x="462" y="278" fill="#8b949e" font-size="8">  transferAmount }</text>
+
+  <!-- Step 4 -->
+  <rect x="640" y="216" width="195" height="74" rx="6" fill="#161b22" stroke="#60a5fa" stroke-width="1.2"/>
+  <rect x="640" y="216" width="195" height="22" rx="6" fill="#10203a"/>
+  <rect x="640" y="230" width="195" height="8" fill="#10203a"/>
+  <text x="737" y="230" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="bold">Step 4 — Record transaction</text>
+  <text x="654" y="250" fill="#8b949e" font-size="8">transaction.create</text>
+  <text x="654" y="264" fill="#8b949e" font-size="8">status: COMPLETED</text>
+  <text x="654" y="278" fill="#8b949e" font-size="8">idempotencyKey stored</text>
+
+  <!-- Step arrows -->
+  <line x1="240" y1="253" x2="255" y2="253" stroke="#4ade80" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="432" y1="253" x2="447" y2="253" stroke="#4ade80" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="624" y1="253" x2="639" y2="253" stroke="#4ade80" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- What the transaction block guarantees -->
+  <rect x="64" y="305" width="771" height="118" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="80" y="322" fill="#30363d" font-size="8" letter-spacing="1">WHAT prisma.$transaction() GUARANTEES</text>
+
+  <!-- Success path -->
+  <rect x="80" y="330" width="360" height="82" rx="4" fill="#0d1117" stroke="#4ade80" stroke-width="1"/>
+  <text x="96" y="347" fill="#4ade80" font-size="9" font-weight="bold">All 4 steps succeed</text>
+  <text x="96" y="362" fill="#8b949e" font-size="8.5">→ Sender balance decremented</text>
+  <text x="96" y="376" fill="#8b949e" font-size="8.5">→ Receiver balance incremented</text>
+  <text x="96" y="390" fill="#8b949e" font-size="8.5">→ Transaction record created with status COMPLETED</text>
+  <text x="96" y="404" fill="#8b949e" font-size="8.5">→ Database committed — changes are permanent</text>
+
+  <!-- Failure path -->
+  <rect x="455" y="330" width="368" height="82" rx="4" fill="#0d1117" stroke="#f87171" stroke-width="1"/>
+  <text x="471" y="347" fill="#f87171" font-size="9" font-weight="bold">Any step throws (incl. race guard)</text>
+  <text x="471" y="362" fill="#8b949e" font-size="8.5">→ ALL changes rolled back automatically</text>
+  <text x="471" y="376" fill="#8b949e" font-size="8.5">→ Sender balance restored to pre-transfer value</text>
+  <text x="471" y="390" fill="#8b949e" font-size="8.5">→ No transaction record created</text>
+  <text x="471" y="404" fill="#8b949e" font-size="8.5">→ Database as if sendMoney() was never called</text>
+
+  <!-- Arrow from transaction block to outcomes -->
+  <line x1="450" y1="436" x2="450" y2="454" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- DECIMAL precision note -->
+  <rect x="44" y="454" width="390" height="60" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="58" y="472" fill="#8b949e" font-size="9" font-weight="bold">Decimal precision — why it matters</text>
+  <text x="58" y="488" fill="#8b949e" font-size="8.5">All amounts use Prisma's Decimal type, not JavaScript floats.</text>
+  <text x="58" y="502" fill="#8b949e" font-size="8.5">0.1 + 0.2 = 0.30000000000000004 in float. Decimal gives exact 0.30.</text>
+
+  <!-- Direction field note -->
+  <rect x="464" y="454" width="392" height="60" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="478" y="472" fill="#8b949e" font-size="9" font-weight="bold">Direction field — added at query time</text>
+  <text x="478" y="488" fill="#8b949e" font-size="8.5">tx.senderId === account.id ? 'SENT' : 'RECEIVED'</text>
+  <text x="478" y="502" fill="#8b949e" font-size="8.5">Not stored in DB — derived. Keeps schema clean.</text>
+
+  <line x1="80" y1="528" x2="820" y2="528" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="542" text-anchor="middle" fill="#8b949e" font-size="8.5">Parallel count + data fetch: Promise.all([findMany, count]) — one round trip, not two sequential queries</text>
+  <text x="820" y="555" text-anchor="end" fill="#30363d" font-size="8">atomic-transfer.svg</text>
+</svg>
