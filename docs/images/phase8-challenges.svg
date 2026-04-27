@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 900 520">
+  <!-- Generator: Adobe Illustrator 29.8.6, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e6edf3;
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10 {
+        isolation: isolate;
+      }
+
+      .st0, .st2, .st7, .st9 {
+        font-family: CourierNewPS-BoldMT, 'Courier New';
+        font-weight: 700;
+      }
+
+      .st1 {
+        fill: #30363d;
+      }
+
+      .st1, .st3, .st4, .st5 {
+        font-size: 8px;
+      }
+
+      .st1, .st3, .st4, .st5, .st6, .st8, .st10 {
+        font-family: CourierNewPSMT, 'Courier New';
+      }
+
+      .st2, .st4 {
+        fill: #f87171;
+      }
+
+      .st2, .st7, .st9, .st10 {
+        font-size: 9px;
+      }
+
+      .st3, .st7 {
+        fill: #fbbf24;
+      }
+
+      .st11 {
+        fill: #2a2010;
+        stroke: #fbbf24;
+      }
+
+      .st11, .st12, .st13, .st14 {
+        stroke-width: 1.5px;
+      }
+
+      .st5, .st9 {
+        fill: #60a5fa;
+      }
+
+      .st15 {
+        fill: #0d1117;
+      }
+
+      .st6 {
+        fill: #4ade80;
+      }
+
+      .st6, .st8 {
+        font-size: 8.5px;
+      }
+
+      .st12 {
+        stroke: #60a5fa;
+      }
+
+      .st12, .st16 {
+        fill: #10203a;
+      }
+
+      .st13, .st17 {
+        fill: none;
+      }
+
+      .st13, .st17, .st18 {
+        stroke: #30363d;
+      }
+
+      .st8, .st10 {
+        fill: #8b949e;
+      }
+
+      .st19 {
+        fill: #1e1a10;
+      }
+
+      .st18 {
+        fill: #161b22;
+      }
+
+      .st20 {
+        fill: #1e1010;
+      }
+
+      .st10 {
+        letter-spacing: .11em;
+      }
+
+      .st14 {
+        fill: #2a1010;
+        stroke: #f87171;
+      }
+    </style>
+  </defs>
+  <rect class="st15" width="900" height="520"/>
+  <text class="st0" transform="translate(213.47 34)"><tspan x="0" y="0">FINPAY API — PHASE 8 ENGINEERING CHALLENGES</tspan></text>
+  <line class="st17" x1="80" y1="44" x2="820" y2="44"/>
+  <text class="st10" transform="translate(168.36 60)"><tspan x="0" y="0">Wiring decisions and problems encountered connecting controllers → routes → app → server</tspan></text>
+  <line class="st13" x1="140" y1="76" x2="140" y2="488"/>
+  <circle class="st14" cx="140" cy="96" r="10"/>
+  <text class="st2" transform="translate(137.3 100)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="166" y="76" width="694" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="76" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="92" width="694" height="8"/>
+  <text class="st2" transform="translate(180 91)"><tspan x="0" y="0">errorHandler registered in the wrong position — errors not caught</tspan></text>
+  <text class="st1" transform="translate(621.58 91)"><tspan x="0" y="0">fix: must be final app.use()</tspan></text>
+  <text class="st8" transform="translate(180 108)"><tspan x="0" y="0">Express identifies error-handling middleware by its four-argument signature (err, req, res, next). </tspan><tspan x="0" y="10.2">If registered before routes, it never receives errors thrown by those routes.</tspan></text>
+  <text class="st6" transform="translate(180 129)"><tspan x="0" y="0">Fix: errorHandler is always the very last app.use() call in app.js — after all routes, after the 404 handler, after everything else.</tspan></text>
+  <circle class="st14" cx="140" cy="166" r="10"/>
+  <text class="st2" transform="translate(137.3 170)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="166" y="146" width="694" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="146" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="162" width="694" height="8"/>
+  <text class="st2" transform="translate(180 161)"><tspan x="0" y="0">Browser clients rejected by CORS when sending Idempotency-Key header</tspan></text>
+  <text class="st1" transform="translate(631.18 161)"><tspan x="0" y="0">fix: add to allowedHeaders</tspan></text>
+  <text class="st8" transform="translate(180 176)"><tspan x="0" y="0">CORS preflight (OPTIONS) checks that custom headers are explicitly allowed. </tspan><tspan x="0" y="10.2">Idempotency-Key is not a standard header — browsers block it unless whitelisted.</tspan></text>
+  <text class="st6" transform="translate(180 197)"><tspan x="0" y="0">Fix: added &apos;Idempotency-Key&apos; to the allowedHeaders array in cors() config. </tspan><tspan x="0" y="10.2">Standard headers like Content-Type and Authorization are permitted by default.</tspan></text>
+  <circle class="st11" cx="140" cy="236" r="10"/>
+  <text class="st7" transform="translate(137.3 240)"><tspan x="0" y="0">~</tspan></text>
+  <rect class="st18" x="166" y="216" width="694" height="64" rx="6" ry="6"/>
+  <rect class="st19" x="166" y="216" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st19" x="166" y="232" width="694" height="8"/>
+  <text class="st7" transform="translate(180 231)"><tspan x="0" y="0">Docker stop kills process mid-request — in-flight transactions left in PENDING state</tspan></text>
+  <text class="st1" transform="translate(583.17 231)"><tspan x="0" y="0">fix: graceful shutdown + 10s timeout</tspan></text>
+  <text class="st8" transform="translate(180 246)"><tspan x="0" y="0">Without a SIGTERM handler, Docker sends SIGTERM then SIGKILL after 10s. Any request in flight — including an atomic transfer — </tspan><tspan x="0" y="10.2">is interrupted. The DB transaction may or may not have committed.</tspan></text>
+  <text class="st6" transform="translate(180 266)"><tspan x="0" y="0">Fix: server.close() stops new connections, waits for in-flight requests to finish, then disconnects DB and Redis in order. </tspan><tspan x="0" y="10.2">10s force-exit is the safety valve if shutdown hangs.</tspan></text>
+  <circle class="st14" cx="140" cy="306" r="10"/>
+  <text class="st2" transform="translate(137.3 310)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="166" y="286" width="694" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="286" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="166" y="302" width="694" height="8"/>
+  <text class="st2" transform="translate(180 301)"><tspan x="0" y="0">Swagger UI loaded but showed zero endpoints</tspan></text>
+  <text class="st1" transform="translate(626.38 301)"><tspan x="0" y="0">fix: correct apis glob path</tspan></text>
+  <text class="st8" transform="translate(180 316)"><tspan x="0" y="0">swagger-jsdoc scans files for JSDoc @swagger comments using the apis glob. An incorrect path </tspan><tspan x="0" y="10.2">(e.g. &apos;./src/routes/*.ts&apos; or missing the wildcard) returns an empty spec.</tspan></text>
+  <text class="st6" transform="translate(180 337)"><tspan x="0" y="0">Fix: verified glob as &apos;./src/routes/*.js&apos; and confirmed the JSDoc comment blocks are directly above each router.post/get() </tspan><tspan x="0" y="10.2">call with no blank lines between.</tspan></text>
+  <circle class="st12" cx="140" cy="376" r="10"/>
+  <text class="st9" transform="translate(137.3 380)"><tspan x="0" y="0">+</tspan></text>
+  <rect class="st18" x="166" y="356" width="694" height="64" rx="6" ry="6"/>
+  <rect class="st16" x="166" y="356" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st16" x="166" y="372" width="694" height="8"/>
+  <text class="st9" transform="translate(180 371)"><tspan x="0" y="0">No body size limit — server could be used in large payload attacks</tspan></text>
+  <text class="st1" transform="translate(626.38 371)"><tspan x="0" y="0">design decision: 10kb limit</tspan></text>
+  <text class="st8" transform="translate(180 384)"><tspan x="0" y="0">Express without a body size limit will parse arbitrarily large JSON bodies, consuming CPU and memory. </tspan><tspan x="0" y="10.2">A 50MB JSON body sent repeatedly can exhaust a small server.</tspan></text>
+  <text class="st6" transform="translate(180 405)"><tspan x="0" y="0">Fix: express.json({ limit: &apos;10kb&apos; }). No valid FinPay request body exceeds a few hundred bytes. </tspan><tspan x="0" y="10.2">10kb is generous while closing the attack surface.</tspan></text>
+  <circle class="st12" cx="140" cy="446" r="10"/>
+  <text class="st9" transform="translate(137.3 450)"><tspan x="0" y="0">+</tspan></text>
+  <rect class="st18" x="166" y="426" width="694" height="56" rx="6" ry="6"/>
+  <rect class="st16" x="166" y="426" width="694" height="24" rx="6" ry="6"/>
+  <rect class="st16" x="166" y="442" width="694" height="8"/>
+  <text class="st9" transform="translate(180 441)"><tspan x="0" y="0">Swagger token lost on every page refresh — friction for manual testing</tspan></text>
+  <text class="st1" transform="translate(607.18 441)"><tspan x="0" y="0">fix: persistAuthorization: true</tspan></text>
+  <text class="st8" transform="translate(180 455)"><tspan x="0" y="0">By default, Swagger UI clears the Bearer token on refresh. During development you re-paste the token on every reload.</tspan></text>
+  <text class="st6" transform="translate(180 470)"><tspan x="0" y="0">Fix: swaggerOptions: { persistAuthorization: true } in the setup call. Token survives page refreshes — </tspan><tspan x="0" y="10.2">stored in browser sessionStorage by Swagger UI itself.</tspan></text>
+  <line class="st17" x1="80" y1="492" x2="820" y2="492"/>
+  <text class="st4" transform="translate(140 504)"><tspan x="0" y="0">red = bug / breakage</tspan></text>
+  <text class="st3" transform="translate(294 504)"><tspan x="0" y="0">yellow = ops / infrastructure risk</tspan></text>
+  <text class="st5" transform="translate(490 504)"><tspan x="0" y="0">blue = design / DX decision</tspan></text>
+  <text class="st1" transform="translate(719.18 504)"><tspan x="0" y="0">phase8-challenges.svg</tspan></text>
+</svg>

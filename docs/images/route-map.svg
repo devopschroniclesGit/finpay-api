@@ -1,0 +1,178 @@
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="560" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — ROUTE MAP &amp; MIDDLEWARE CHAINS (PHASE 8)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Column headers -->
+  <text x="46" y="64" fill="#30363d" font-size="8" letter-spacing="1">METHOD + ENDPOINT</text>
+  <text x="290" y="64" fill="#30363d" font-size="8" letter-spacing="1">MIDDLEWARE CHAIN (left to right)</text>
+  <text x="830" y="64" text-anchor="end" fill="#30363d" font-size="8" letter-spacing="1">STATUS</text>
+  <line x1="44" y1="68" x2="856" y2="68" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Helper: chip factory colours
+       auth      = #60a5fa
+       rl        = #fbbf24
+       idm       = #c084fc
+       cache     = #fbbf24 dashed
+       audit     = #60a5fa dashed
+       validator = #8b949e
+       handler   = #4ade80
+  -->
+
+  <!-- ROW 1: POST /auth/register -->
+  <rect x="44" y="74" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="89" fill="#4ade80" font-size="9" font-weight="bold">POST</text>
+  <text x="90" y="89" fill="#e6edf3" font-size="9">/api/v1/auth/register</text>
+  <text x="56" y="104" fill="#8b949e" font-size="8">Public · creates user + wallet · 201</text>
+
+  <!-- chips -->
+  <rect x="290" y="78" width="74" height="20" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1"/><text x="327" y="92" text-anchor="middle" fill="#fbbf24" font-size="8">authLimiter</text>
+  <text x="366" y="92" fill="#4ade80" font-size="8">→</text>
+  <rect x="374" y="78" width="76" height="20" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/><text x="412" y="92" text-anchor="middle" fill="#8b949e" font-size="8">registerRules</text>
+  <text x="452" y="92" fill="#4ade80" font-size="8">→</text>
+  <rect x="460" y="78" width="86" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="503" y="92" text-anchor="middle" fill="#4ade80" font-size="8">auth.register</text>
+  <text x="834" y="92" text-anchor="end" fill="#4ade80" font-size="8">201</text>
+
+  <line x1="44" y1="116" x2="856" y2="116" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 2: POST /auth/login -->
+  <rect x="44" y="120" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="135" fill="#4ade80" font-size="9" font-weight="bold">POST</text>
+  <text x="90" y="135" fill="#e6edf3" font-size="9">/api/v1/auth/login</text>
+  <text x="56" y="150" fill="#8b949e" font-size="8">Public · returns JWT · 200</text>
+
+  <rect x="290" y="124" width="74" height="20" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1"/><text x="327" y="138" text-anchor="middle" fill="#fbbf24" font-size="8">authLimiter</text>
+  <text x="366" y="138" fill="#4ade80" font-size="8">→</text>
+  <rect x="374" y="124" width="68" height="20" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/><text x="408" y="138" text-anchor="middle" fill="#8b949e" font-size="8">loginRules</text>
+  <text x="444" y="138" fill="#4ade80" font-size="8">→</text>
+  <rect x="452" y="124" width="74" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="489" y="138" text-anchor="middle" fill="#4ade80" font-size="8">auth.login</text>
+  <text x="834" y="138" text-anchor="end" fill="#4ade80" font-size="8">200</text>
+
+  <line x1="44" y1="162" x2="856" y2="162" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 3: GET /auth/me -->
+  <rect x="44" y="166" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="181" fill="#60a5fa" font-size="9" font-weight="bold">GET</text>
+  <text x="86" y="181" fill="#e6edf3" font-size="9">/api/v1/auth/me</text>
+  <text x="56" y="196" fill="#8b949e" font-size="8">Auth required · user profile · 200</text>
+
+  <rect x="290" y="170" width="78" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/><text x="329" y="184" text-anchor="middle" fill="#60a5fa" font-size="8">authenticate</text>
+  <text x="370" y="184" fill="#4ade80" font-size="8">→</text>
+  <rect x="378" y="170" width="80" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="418" y="184" text-anchor="middle" fill="#4ade80" font-size="8">auth.getProfile</text>
+  <text x="834" y="184" text-anchor="end" fill="#4ade80" font-size="8">200</text>
+
+  <line x1="44" y1="208" x2="856" y2="208" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 4: GET /accounts/me -->
+  <rect x="44" y="212" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="227" fill="#60a5fa" font-size="9" font-weight="bold">GET</text>
+  <text x="86" y="227" fill="#e6edf3" font-size="9">/api/v1/accounts/me</text>
+  <text x="56" y="242" fill="#8b949e" font-size="8">Auth · balance · cached 30s · 200</text>
+
+  <rect x="290" y="216" width="78" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/><text x="329" y="230" text-anchor="middle" fill="#60a5fa" font-size="8">authenticate</text>
+  <text x="370" y="230" fill="#4ade80" font-size="8">→</text>
+  <rect x="378" y="216" width="66" height="20" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/><text x="411" y="230" text-anchor="middle" fill="#fbbf24" font-size="8">cache(30)</text>
+  <text x="446" y="230" fill="#4ade80" font-size="8">→</text>
+  <rect x="454" y="216" width="100" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1" stroke-dasharray="3,2"/><text x="504" y="230" text-anchor="middle" fill="#60a5fa" font-size="8">audit(VIEW_ACCOUNT)</text>
+  <text x="556" y="230" fill="#4ade80" font-size="8">→</text>
+  <rect x="564" y="216" width="90" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="609" y="230" text-anchor="middle" fill="#4ade80" font-size="8">acct.getMyAccount</text>
+  <text x="834" y="230" text-anchor="end" fill="#4ade80" font-size="8">200</text>
+
+  <line x1="44" y1="254" x2="856" y2="254" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 5: POST /transactions/send -->
+  <rect x="44" y="258" width="236" height="46" rx="4" fill="#161b22" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="56" y="273" fill="#4ade80" font-size="9" font-weight="bold">POST</text>
+  <text x="90" y="273" fill="#e6edf3" font-size="9">/api/v1/transactions/send</text>
+  <text x="56" y="287" fill="#8b949e" font-size="8">Auth · rate limited · idempotent</text>
+  <text x="56" y="299" fill="#4ade80" font-size="8">Most protected route · 201</text>
+
+  <rect x="290" y="262" width="78" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/><text x="329" y="276" text-anchor="middle" fill="#60a5fa" font-size="8">authenticate</text>
+  <text x="370" y="276" fill="#4ade80" font-size="8">→</text>
+  <rect x="378" y="262" width="86" height="20" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1"/><text x="421" y="276" text-anchor="middle" fill="#fbbf24" font-size="8">txLimiter</text>
+  <text x="466" y="276" fill="#4ade80" font-size="8">→</text>
+  <rect x="474" y="262" width="84" height="20" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/><text x="516" y="276" text-anchor="middle" fill="#8b949e" font-size="8">sendMoneyRules</text>
+  <text x="560" y="276" fill="#4ade80" font-size="8">→</text>
+  <rect x="568" y="262" width="84" height="20" rx="3" fill="#1e1030" stroke="#c084fc" stroke-width="1"/><text x="610" y="276" text-anchor="middle" fill="#c084fc" font-size="8">idempotency</text>
+  <text x="654" y="276" fill="#4ade80" font-size="8">→</text>
+  <rect x="662" y="262" width="84" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1" stroke-dasharray="3,2"/><text x="704" y="276" text-anchor="middle" fill="#60a5fa" font-size="8">audit(SEND_MONEY)</text>
+  <text x="748" y="276" fill="#4ade80" font-size="8">→</text>
+  <rect x="756" y="262" width="70" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="791" y="276" text-anchor="middle" fill="#4ade80" font-size="8">sendMoney</text>
+  <text x="834" y="276" text-anchor="end" fill="#4ade80" font-size="8">201</text>
+
+  <line x1="44" y1="308" x2="856" y2="308" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 6: GET /transactions/history -->
+  <rect x="44" y="312" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="327" fill="#60a5fa" font-size="9" font-weight="bold">GET</text>
+  <text x="86" y="327" fill="#e6edf3" font-size="9">/api/v1/transactions/history</text>
+  <text x="56" y="342" fill="#8b949e" font-size="8">Auth · paginated · cached 15s · 200</text>
+
+  <rect x="290" y="316" width="78" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/><text x="329" y="330" text-anchor="middle" fill="#60a5fa" font-size="8">authenticate</text>
+  <text x="370" y="330" fill="#4ade80" font-size="8">→</text>
+  <rect x="378" y="316" width="66" height="20" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/><text x="411" y="330" text-anchor="middle" fill="#fbbf24" font-size="8">cache(15)</text>
+  <text x="446" y="330" fill="#4ade80" font-size="8">→</text>
+  <rect x="454" y="316" width="76" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="492" y="330" text-anchor="middle" fill="#4ade80" font-size="8">getHistory</text>
+  <text x="834" y="330" text-anchor="end" fill="#4ade80" font-size="8">200</text>
+
+  <line x1="44" y1="354" x2="856" y2="354" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 7: GET /transactions/:id -->
+  <rect x="44" y="358" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="373" fill="#60a5fa" font-size="9" font-weight="bold">GET</text>
+  <text x="86" y="373" fill="#e6edf3" font-size="9">/api/v1/transactions/:id</text>
+  <text x="56" y="388" fill="#8b949e" font-size="8">Auth · ownership enforced · 200/403</text>
+
+  <rect x="290" y="362" width="78" height="20" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/><text x="329" y="376" text-anchor="middle" fill="#60a5fa" font-size="8">authenticate</text>
+  <text x="370" y="376" fill="#4ade80" font-size="8">→</text>
+  <rect x="378" y="362" width="56" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="406" y="376" text-anchor="middle" fill="#4ade80" font-size="8">getOne</text>
+  <text x="834" y="376" text-anchor="end" fill="#4ade80" font-size="8">200/403</text>
+
+  <line x1="44" y1="400" x2="856" y2="400" stroke="#1a1a2a" stroke-width="1"/>
+
+  <!-- ROW 8: GET /health -->
+  <rect x="44" y="404" width="236" height="38" rx="4" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="56" y="419" fill="#60a5fa" font-size="9" font-weight="bold">GET</text>
+  <text x="86" y="419" fill="#e6edf3" font-size="9">/api/v1/health</text>
+  <text x="56" y="434" fill="#8b949e" font-size="8">Public · Docker + CI/CD · 200</text>
+
+  <rect x="290" y="408" width="160" height="20" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/><text x="370" y="422" text-anchor="middle" fill="#4ade80" font-size="8">inline handler · no middleware</text>
+  <text x="834" y="422" text-anchor="end" fill="#4ade80" font-size="8">200</text>
+
+  <!-- Legend -->
+  <line x1="44" y1="456" x2="856" y2="456" stroke="#30363d" stroke-width="1"/>
+
+  <rect x="54" y="464" width="66" height="16" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1"/>
+  <text x="87" y="476" text-anchor="middle" fill="#60a5fa" font-size="7.5">authenticate</text>
+
+  <rect x="132" y="464" width="60" height="16" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1"/>
+  <text x="162" y="476" text-anchor="middle" fill="#fbbf24" font-size="7.5">rate limiter</text>
+
+  <rect x="204" y="464" width="56" height="16" rx="3" fill="#2a2010" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="232" y="476" text-anchor="middle" fill="#fbbf24" font-size="7.5">cache</text>
+
+  <rect x="272" y="464" width="68" height="16" rx="3" fill="#1e1030" stroke="#c084fc" stroke-width="1"/>
+  <text x="306" y="476" text-anchor="middle" fill="#c084fc" font-size="7.5">idempotency</text>
+
+  <rect x="352" y="464" width="80" height="16" rx="3" fill="#10203a" stroke="#60a5fa" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="392" y="476" text-anchor="middle" fill="#60a5fa" font-size="7.5">audit (async)</text>
+
+  <rect x="444" y="464" width="60" height="16" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/>
+  <text x="474" y="476" text-anchor="middle" fill="#8b949e" font-size="7.5">validators</text>
+
+  <rect x="516" y="464" width="56" height="16" rx="3" fill="#1a3a2a" stroke="#4ade80" stroke-width="1"/>
+  <text x="544" y="476" text-anchor="middle" fill="#4ade80" font-size="7.5">handler</text>
+
+  <text x="856" y="476" text-anchor="end" fill="#30363d" font-size="7.5">route-map.svg</text>
+
+  <text x="44" y="500" fill="#8b949e" font-size="8">POST /transactions/send has the longest middleware chain: authenticate → transactionLimiter → sendMoneyRules → idempotencyCheck → audit → controller</text>
+  <text x="44" y="516" fill="#8b949e" font-size="8">errorHandler is NOT shown — it is registered in app.js and catches any throw from any route above. It is always last.</text>
+  <text x="44" y="532" fill="#8b949e" font-size="8">apiLimiter (100 req/15min) is NOT shown per route — it is applied globally to all /api/* in app.js before routes register.</text>
+  <text x="44" y="548" fill="#8b949e" font-size="8">dashed border = runs asynchronously after res is sent (audit) or may short-circuit with cached response (cache).</text>
+</svg>

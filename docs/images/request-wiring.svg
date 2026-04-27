@@ -1,0 +1,133 @@
+<svg viewBox="0 0 900 580" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="580" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — FULL REQUEST WIRING (PHASE 8)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">server.js starts the process · app.js assembles the stack · routes connect URLs to controllers · controllers call services</text>
+
+  <!-- SERVER.JS -->
+  <rect x="44" y="70" width="812" height="70" rx="6" fill="#161b22" stroke="#4ade80" stroke-width="1.5"/>
+  <rect x="44" y="70" width="812" height="24" rx="6" fill="#1a3a2a"/>
+  <rect x="44" y="86" width="812" height="8" fill="#1a3a2a"/>
+  <text x="450" y="85" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="bold">server.js</text>
+  <line x1="44" y1="94" x2="856" y2="94" stroke="#4ade80" stroke-width="0.8"/>
+  <text x="58" y="110" fill="#8b949e" font-size="8.5">app.listen(PORT)   ·   SIGTERM / SIGINT → graceful shutdown   ·   server.close() → disconnectDatabase() → disconnectRedis() → exit(0)</text>
+  <text x="58" y="126" fill="#8b949e" font-size="8.5">10s force-exit timeout   ·   unhandledRejection → log + exit(1)   ·   logs startup URL, docs URL, health URL</text>
+
+  <line x1="450" y1="140" x2="450" y2="156" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- APP.JS -->
+  <rect x="44" y="156" width="812" height="106" rx="6" fill="#161b22" stroke="#4ade80" stroke-width="1.5"/>
+  <rect x="44" y="156" width="812" height="24" rx="6" fill="#1a3a2a"/>
+  <rect x="44" y="172" width="812" height="8" fill="#1a3a2a"/>
+  <text x="450" y="171" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="bold">app.js</text>
+  <line x1="44" y1="180" x2="856" y2="180" stroke="#4ade80" stroke-width="0.8"/>
+
+  <!-- Global middleware row -->
+  <rect x="60" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/>
+  <text x="104" y="199" text-anchor="middle" fill="#e6edf3" font-size="8" font-weight="bold">helmet()</text>
+  <text x="104" y="211" text-anchor="middle" fill="#8b949e" font-size="7">sec headers</text>
+
+  <rect x="156" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/>
+  <text x="200" y="199" text-anchor="middle" fill="#e6edf3" font-size="8" font-weight="bold">cors()</text>
+  <text x="200" y="211" text-anchor="middle" fill="#8b949e" font-size="7">+ Idempotency-Key</text>
+
+  <rect x="252" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/>
+  <text x="296" y="199" text-anchor="middle" fill="#e6edf3" font-size="8" font-weight="bold">json(10kb)</text>
+  <text x="296" y="211" text-anchor="middle" fill="#8b949e" font-size="7">body limit</text>
+
+  <rect x="348" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#8b949e" stroke-width="1"/>
+  <text x="392" y="199" text-anchor="middle" fill="#e6edf3" font-size="8" font-weight="bold">morgan()</text>
+  <text x="392" y="211" text-anchor="middle" fill="#8b949e" font-size="7">→ Winston</text>
+
+  <rect x="444" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#fbbf24" stroke-width="1"/>
+  <text x="488" y="199" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="bold">apiLimiter</text>
+  <text x="488" y="211" text-anchor="middle" fill="#8b949e" font-size="7">100/15min global</text>
+
+  <rect x="540" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#60a5fa" stroke-width="1"/>
+  <text x="584" y="199" text-anchor="middle" fill="#60a5fa" font-size="8" font-weight="bold">/api/v1 routes</text>
+  <text x="584" y="211" text-anchor="middle" fill="#8b949e" font-size="7">index.js</text>
+
+  <rect x="636" y="186" width="88" height="34" rx="3" fill="#1a1a2a" stroke="#c084fc" stroke-width="1"/>
+  <text x="680" y="199" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="bold">Swagger UI</text>
+  <text x="680" y="211" text-anchor="middle" fill="#8b949e" font-size="7">/api/docs</text>
+
+  <rect x="732" y="186" width="108" height="34" rx="3" fill="#1a1a2a" stroke="#f87171" stroke-width="1"/>
+  <text x="786" y="199" text-anchor="middle" fill="#f87171" font-size="8" font-weight="bold">404 + errorHandler</text>
+  <text x="786" y="211" text-anchor="middle" fill="#8b949e" font-size="7">must be last</text>
+
+  <text x="58" y="252" fill="#8b949e" font-size="8">errorHandler MUST be the final app.use() call — Express identifies error handlers by their 4-argument signature (err, req, res, next)</text>
+
+  <line x1="584" y1="262" x2="584" y2="278" stroke="#60a5fa" stroke-width="1.2" marker-end="url(#arrow-b)"/>
+
+  <!-- ROUTES LAYER -->
+  <rect x="44" y="278" width="812" height="72" rx="6" fill="#161b22" stroke="#60a5fa" stroke-width="1.2"/>
+  <rect x="44" y="278" width="812" height="22" rx="6" fill="#10203a"/>
+  <rect x="44" y="292" width="812" height="8" fill="#10203a"/>
+  <text x="450" y="291" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="bold">src/routes/</text>
+  <line x1="44" y1="300" x2="856" y2="300" stroke="#60a5fa" stroke-width="0.8"/>
+
+  <rect x="60" y="306" width="190" height="34" rx="4" fill="#0d1117" stroke="#60a5fa" stroke-width="1"/>
+  <text x="155" y="319" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="bold">auth.routes.js</text>
+  <text x="155" y="331" text-anchor="middle" fill="#8b949e" font-size="7.5">register · login · /me</text>
+
+  <rect x="262" y="306" width="190" height="34" rx="4" fill="#0d1117" stroke="#60a5fa" stroke-width="1"/>
+  <text x="357" y="319" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="bold">account.routes.js</text>
+  <text x="357" y="331" text-anchor="middle" fill="#8b949e" font-size="7.5">GET /accounts/me</text>
+
+  <rect x="464" y="306" width="190" height="34" rx="4" fill="#0d1117" stroke="#60a5fa" stroke-width="1"/>
+  <text x="559" y="319" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="bold">transaction.routes.js</text>
+  <text x="559" y="331" text-anchor="middle" fill="#8b949e" font-size="7.5">send · history · /:id</text>
+
+  <rect x="666" y="306" width="174" height="34" rx="4" fill="#0d1117" stroke="#8b949e" stroke-width="1"/>
+  <text x="753" y="319" text-anchor="middle" fill="#8b949e" font-size="8.5" font-weight="bold">GET /health</text>
+  <text x="753" y="331" text-anchor="middle" fill="#8b949e" font-size="7.5">public · no auth · uptime</text>
+
+  <line x1="450" y1="350" x2="450" y2="366" stroke="#4ade80" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- CONTROLLERS LAYER -->
+  <rect x="44" y="366" width="812" height="72" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
+  <rect x="44" y="366" width="812" height="22" rx="6" fill="#1a1a2a"/>
+  <rect x="44" y="380" width="812" height="8" fill="#1a1a2a"/>
+  <text x="450" y="379" text-anchor="middle" fill="#8b949e" font-size="10" font-weight="bold">src/controllers/   (thin — extract req data → call service → return response)</text>
+  <line x1="44" y1="388" x2="856" y2="388" stroke="#30363d" stroke-width="0.8"/>
+
+  <rect x="60" y="394" width="246" height="34" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="183" y="407" text-anchor="middle" fill="#8b949e" font-size="8.5" font-weight="bold">auth.controller.js</text>
+  <text x="183" y="419" text-anchor="middle" fill="#8b949e" font-size="7.5">register · login · getProfile</text>
+
+  <rect x="326" y="394" width="246" height="34" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="449" y="407" text-anchor="middle" fill="#8b949e" font-size="8.5" font-weight="bold">account.controller.js</text>
+  <text x="449" y="419" text-anchor="middle" fill="#8b949e" font-size="7.5">getMyAccount</text>
+
+  <rect x="592" y="394" width="248" height="34" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="716" y="407" text-anchor="middle" fill="#8b949e" font-size="8.5" font-weight="bold">transaction.controller.js</text>
+  <text x="716" y="419" text-anchor="middle" fill="#8b949e" font-size="7.5">sendMoney · getHistory · getOne</text>
+
+  <line x1="450" y1="438" x2="450" y2="454" stroke="#4ade80" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- SERVICES LAYER -->
+  <rect x="44" y="454" width="812" height="50" rx="6" fill="#0d1117" stroke="#4ade80" stroke-width="1"/>
+  <text x="450" y="472" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="bold">src/services/   (Phase 7 — business logic · auth · account · transaction)</text>
+  <text x="450" y="490" text-anchor="middle" fill="#8b949e" font-size="8">auth.service.js · account.service.js · transaction.service.js · all import prisma + logger</text>
+
+  <!-- VALIDATORS note -->
+  <rect x="44" y="516" width="380" height="36" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="58" y="530" fill="#8b949e" font-size="8.5" font-weight="bold">src/validators/</text>
+  <text x="58" y="544" fill="#8b949e" font-size="8">auth.validators.js · transaction.validators.js · run before controllers · express-validator</text>
+
+  <!-- COMMITS note -->
+  <rect x="440" y="516" width="416" height="36" rx="4" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="454" y="530" fill="#8b949e" font-size="8.5" font-weight="bold">4 commits in Phase 8:</text>
+  <text x="454" y="544" fill="#8b949e" font-size="8">8A controllers  ·  8B routes + validators  ·  8C app + server  ·  8D smoke test</text>
+
+  <text x="820" y="570" text-anchor="end" fill="#30363d" font-size="8">request-wiring.svg</text>
+</svg>
