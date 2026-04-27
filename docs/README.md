@@ -7,11 +7,11 @@ Inspired by the backend architecture of Stripe, PayFast, and Yoco.
 
 ## Architecture
 
-![System Architecture](./docs/architecture.svg)
+![System Architecture](./architecture.svg)
 
 The request pipeline flows through a layered middleware stack before reaching any business logic. Every inbound HTTP request passes through JWT authentication, a Redis-backed rate limiter, and an idempotency check before the route handler is invoked. A cache lookup follows — if the response is already stored in Redis, the request returns early without touching the database. Only uncached requests continue to the service layer, which issues atomic Prisma queries against PostgreSQL. Winston captures structured logs at every layer.
 
-![Data Model](./docs/data-model.svg)
+![Data Model](./data-model.svg)
 
 The schema is built around four core tables: `users`, `accounts`, `transactions`, and `audit_logs`. Each user owns exactly one account. Transactions carry both a `senderId` and a `receiverId` foreign key into the accounts table, and are written inside a Prisma `$transaction` block so that the debit and credit are always atomic. Idempotency keys are stored in both Redis (for sub-millisecond lookup with a TTL) and the database (for durable audit purposes).
 
