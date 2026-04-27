@@ -1,0 +1,100 @@
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow-g" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+    </marker>
+    <marker id="arrow-y" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24"/>
+    </marker>
+    <marker id="arrow-p" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c084fc"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="520" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — SEED TRANSACTION NETWORK (PHASE 9)</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">6 pre-seeded COMPLETED transactions · spread across 28 days · realistic ZAR payment descriptions</text>
+
+  <!-- ─── ALICE (top centre) ─── -->
+  <rect x="330" y="76" width="240" height="90" rx="8" fill="#161b22" stroke="#4ade80" stroke-width="2"/>
+  <text x="450" y="98" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="bold">Alice Smith</text>
+  <text x="450" y="114" text-anchor="middle" fill="#8b949e" font-size="9">alice@finpay.dev</text>
+  <line x1="330" y1="120" x2="570" y2="120" stroke="#30363d" stroke-width="0.8"/>
+  <text x="450" y="136" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="bold">R 10,000.00</text>
+  <text x="450" y="154" text-anchor="middle" fill="#8b949e" font-size="8">3 transactions (sender + receiver)</text>
+
+  <!-- ─── BOB (bottom left) ─── -->
+  <rect x="60" y="348" width="240" height="90" rx="8" fill="#161b22" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="180" y="370" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="bold">Bob Jones</text>
+  <text x="180" y="386" text-anchor="middle" fill="#8b949e" font-size="9">bob@finpay.dev</text>
+  <line x1="60" y1="392" x2="300" y2="392" stroke="#30363d" stroke-width="0.8"/>
+  <text x="180" y="408" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="bold">R 5,000.00</text>
+  <text x="180" y="426" text-anchor="middle" fill="#8b949e" font-size="8">3 transactions (sender + receiver)</text>
+
+  <!-- ─── CHARLIE (bottom right) ─── -->
+  <rect x="600" y="348" width="240" height="90" rx="8" fill="#161b22" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="720" y="370" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold">Charlie Dlamini</text>
+  <text x="720" y="386" text-anchor="middle" fill="#8b949e" font-size="9">charlie@finpay.dev</text>
+  <line x1="600" y1="392" x2="840" y2="392" stroke="#30363d" stroke-width="0.8"/>
+  <text x="720" y="408" text-anchor="middle" fill="#c084fc" font-size="13" font-weight="bold">R 2,500.00</text>
+  <text x="720" y="426" text-anchor="middle" fill="#8b949e" font-size="8">3 transactions (sender + receiver)</text>
+
+  <!-- ─── TX 1: Alice → Bob (R1500, 28 days ago) ─── -->
+  <line x1="365" y1="166" x2="220" y2="348" stroke="#4ade80" stroke-width="1.8" marker-end="url(#arrow-g)"/>
+  <rect x="200" y="232" width="192" height="44" rx="4" fill="#161b22" stroke="#4ade80" stroke-width="1"/>
+  <text x="210" y="249" fill="#4ade80" font-size="9" font-weight="bold">seed-tx-001 · 28d ago</text>
+  <text x="210" y="263" fill="#e6edf3" font-size="9">R 1,500.00 — rent contribution</text>
+
+  <!-- ─── TX 2: Bob → Alice (R250, 21 days ago) ─── -->
+  <line x1="246" y1="348" x2="400" y2="168" stroke="#60a5fa" stroke-width="1.8" marker-end="url(#arrow-b)"/>
+  <rect x="102" y="268" width="192" height="44" rx="4" fill="#161b22" stroke="#60a5fa" stroke-width="1"/>
+  <text x="112" y="285" fill="#60a5fa" font-size="9" font-weight="bold">seed-tx-002 · 21d ago</text>
+  <text x="112" y="299" fill="#e6edf3" font-size="9">R 250.00 — groceries split</text>
+
+  <!-- ─── TX 3: Charlie → Alice (R99, 14 days ago) ─── -->
+  <line x1="640" y1="348" x2="510" y2="168" stroke="#c084fc" stroke-width="1.8" marker-end="url(#arrow-p)"/>
+  <rect x="582" y="234" width="192" height="44" rx="4" fill="#161b22" stroke="#c084fc" stroke-width="1"/>
+  <text x="592" y="251" fill="#c084fc" font-size="9" font-weight="bold">seed-tx-003 · 14d ago</text>
+  <text x="592" y="265" fill="#e6edf3" font-size="9">R 99.00 — airtime top-up</text>
+
+  <!-- ─── TX 4: Alice → Charlie (R350, 10 days ago) ─── -->
+  <line x1="535" y1="166" x2="678" y2="348" stroke="#4ade80" stroke-width="1.8" marker-end="url(#arrow-g)"/>
+  <rect x="608" y="282" width="192" height="44" rx="4" fill="#161b22" stroke="#4ade80" stroke-width="1"/>
+  <text x="618" y="299" fill="#4ade80" font-size="9" font-weight="bold">seed-tx-004 · 10d ago</text>
+  <text x="618" y="313" fill="#e6edf3" font-size="9">R 350.00 — data bundle</text>
+
+  <!-- ─── TX 5: Bob → Charlie (R75, 5 days ago) ─── -->
+  <line x1="300" y1="390" x2="600" y2="390" stroke="#60a5fa" stroke-width="1.8" marker-end="url(#arrow-b)"/>
+  <rect x="350" y="368" width="200" height="36" rx="4" fill="#161b22" stroke="#60a5fa" stroke-width="1"/>
+  <text x="360" y="383" fill="#60a5fa" font-size="9" font-weight="bold">seed-tx-005 · 5d ago</text>
+  <text x="360" y="397" fill="#e6edf3" font-size="9">R 75.00 — coffee catch-up</text>
+
+  <!-- ─── TX 6: Charlie → Bob (R500, 2 days ago) ─── -->
+  <line x1="600" y1="406" x2="300" y2="406" stroke="#c084fc" stroke-width="1.8" marker-end="url(#arrow-p)"/>
+  <rect x="356" y="408" width="200" height="36" rx="4" fill="#161b22" stroke="#c084fc" stroke-width="1"/>
+  <text x="366" y="423" fill="#c084fc" font-size="9" font-weight="bold">seed-tx-006 · 2d ago</text>
+  <text x="366" y="437" fill="#e6edf3" font-size="9">R 500.00 — braai weekend</text>
+
+  <!-- Legend + summary bar -->
+  <line x1="44" y1="460" x2="856" y2="460" stroke="#30363d" stroke-width="1"/>
+
+  <rect x="44" y="468" width="812" height="42" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="58" y="484" fill="#4ade80" font-size="8.5">Alice → Bob/Charlie  2 tx</text>
+  <text x="58" y="500" fill="#4ade80" font-size="8">R 1,850.00 sent</text>
+
+  <text x="230" y="484" fill="#60a5fa" font-size="8.5">Bob → Alice/Charlie  2 tx</text>
+  <text x="230" y="500" fill="#60a5fa" font-size="8">R 325.00 sent</text>
+
+  <text x="402" y="484" fill="#c084fc" font-size="8.5">Charlie → Alice/Bob  2 tx</text>
+  <text x="402" y="500" fill="#c084fc" font-size="8">R 599.00 sent</text>
+
+  <line x1="590" y1="468" x2="590" y2="510" stroke="#30363d" stroke-width="0.8"/>
+  <text x="604" y="484" fill="#8b949e" font-size="8.5">All status: COMPLETED</text>
+  <text x="604" y="497" fill="#8b949e" font-size="8.5">All currency: ZAR</text>
+  <text x="604" y="510" fill="#8b949e" font-size="8.5">idempotencyKey: seed-tx-001 → seed-tx-006</text>
+  <text x="856" y="510" text-anchor="end" fill="#30363d" font-size="8">seed-network.svg</text>
+</svg>

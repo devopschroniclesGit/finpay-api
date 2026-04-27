@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 900 488">
+  <!-- Generator: Adobe Illustrator 29.8.6, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e6edf3;
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10 {
+        isolation: isolate;
+      }
+
+      .st0, .st2, .st7, .st9 {
+        font-family: CourierNewPS-BoldMT, 'Courier New';
+        font-weight: 700;
+      }
+
+      .st1 {
+        fill: #30363d;
+      }
+
+      .st1, .st3, .st4, .st5 {
+        font-size: 8px;
+      }
+
+      .st1, .st3, .st4, .st5, .st6, .st8, .st10 {
+        font-family: CourierNewPSMT, 'Courier New';
+      }
+
+      .st2, .st4 {
+        fill: #f87171;
+      }
+
+      .st2, .st7, .st9, .st10 {
+        font-size: 9px;
+      }
+
+      .st11 {
+        fill: #10203d;
+      }
+
+      .st3, .st7 {
+        fill: #fbbf24;
+      }
+
+      .st12 {
+        fill: #2a2010;
+        stroke: #fbbf24;
+      }
+
+      .st12, .st13, .st14, .st15 {
+        stroke-width: 1.5px;
+      }
+
+      .st5, .st9 {
+        fill: #60a5fa;
+      }
+
+      .st16 {
+        fill: #0d1117;
+      }
+
+      .st6 {
+        fill: #4ade80;
+      }
+
+      .st6, .st8 {
+        font-size: 8.5px;
+      }
+
+      .st13 {
+        stroke: #60a5fa;
+      }
+
+      .st13, .st17 {
+        fill: #10203a;
+      }
+
+      .st14, .st18 {
+        fill: none;
+      }
+
+      .st14, .st18, .st19 {
+        stroke: #30363d;
+      }
+
+      .st8, .st10 {
+        fill: #8b949e;
+      }
+
+      .st20 {
+        fill: #1e1a10;
+      }
+
+      .st19 {
+        fill: #161b22;
+      }
+
+      .st21 {
+        fill: #1e1010;
+      }
+
+      .st10 {
+        letter-spacing: .11em;
+      }
+
+      .st15 {
+        fill: #2a1010;
+        stroke: #f87171;
+      }
+    </style>
+  </defs>
+  <rect class="st16" x="25.94" y="554" width="900" height="488"/>
+  <text class="st0" transform="translate(161.65 17)"><tspan x="0" y="0">FINPAY API — PHASE 9 ENGINEERING CHALLENGES</tspan></text>
+  <line class="st18" x1="37.53" y1="27" x2="875.49" y2="26.97"/>
+  <text class="st10" transform="translate(142.14 43)"><tspan x="0" y="0">Seed design decisions and a late-phase routing bug surfaced during smoke testing</tspan></text>
+  <line class="st14" x1="43.16" y1="55.6" x2="43.16" y2="437.6"/>
+  <circle class="st15" cx="43.16" cy="75.6" r="10"/>
+  <text class="st2" transform="translate(40.46 79.6)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st19" x="68.56" y="55.6" width="812.97" height="64" rx="6" ry="6"/>
+  <rect class="st21" x="68.56" y="55.6" width="812.97" height="24" rx="6" ry="6"/>
+  <rect class="st21" x="68.56" y="71.6" width="694" height="8"/>
+  <text class="st2" transform="translate(82.56 70.6)"><tspan x="0" y="0">Server crashed on startup — app.use(&apos;*&apos;) invalid in path-to-regexp v8</tspan></text>
+  <text class="st1" transform="translate(480.93 70.6)"><tspan x="0" y="0">fix: remove wildcard from 404 handler</tspan></text>
+  <text class="st8" transform="translate(83.9 82.92)"><tspan x="0" y="0">Express 5 ships with path-to-regexp v8 which no longer accepts bare wildcard &apos;*&apos; in app.use(). The 404 handler app.use(&apos;*&apos;, ...) </tspan><tspan x="0" y="10.2">threw a parse error on startup — the server never started.</tspan></text>
+  <text class="st6" transform="translate(83.3 105.91)"><tspan x="0" y="0">Fix: changed to app.use((req, res) =&gt; { ... }) with no path argument. Matches all unmatched routes the same way without relying on </tspan><tspan x="0" y="10.2">the deprecated wildcard syntax.</tspan></text>
+  <circle class="st12" cx="43.16" cy="145.6" r="10"/>
+  <text class="st7" transform="translate(40.46 149.6)"><tspan x="0" y="0">~</tspan></text>
+  <rect class="st19" x="68.56" y="125.6" width="812.92" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="68.56" y="125.6" width="812.92" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="68.56" y="141.6" width="694" height="8"/>
+  <text class="st7" transform="translate(82.56 140.6)"><tspan x="0" y="0">Running the seed twice creates duplicate users — P2002 unique constraint crash</tspan></text>
+  <text class="st1" transform="translate(519.33 140.6)"><tspan x="0" y="0">fix: upsert with email as key</tspan></text>
+  <text class="st8" transform="translate(82.56 154.6)"><tspan x="0" y="0">Using prisma.user.create() on a second run hits the unique constraint on email and throws P2002. The seed fails halfway through, </tspan><tspan x="0" y="10.2">leaving a partially seeded database.</tspan></text>
+  <text class="st6" transform="translate(82.56 174.6)"><tspan x="0" y="0">Fix: prisma.user.upsert() with WHERE email. First run creates. Subsequent runs only reset the account balance — no new rows, </tspan><tspan x="0" y="10.2">no constraint violation, no orphaned data.</tspan></text>
+  <circle class="st12" cx="43.16" cy="215.6" r="10"/>
+  <text class="st7" transform="translate(40.46 219.6)"><tspan x="0" y="0">~</tspan></text>
+  <rect class="st19" x="68.56" y="195.6" width="812.92" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="68.56" y="195.6" width="812.92" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="68.56" y="211.6" width="694" height="8"/>
+  <text class="st7" transform="translate(82.56 210.6)"><tspan x="0" y="0">Re-seeding doubles the transaction count — 6 becomes 12 becomes 18</tspan></text>
+  <text class="st1" transform="translate(447.32 210.6)"><tspan x="0" y="0">fix: seed- prefix + deleteMany before insert</tspan></text>
+  <text class="st8" transform="translate(82.56 225.6)"><tspan x="0" y="0">transaction.create() is not idempotent. Each re-seed adds 6 more rows. The transaction history fills with duplicates and balance </tspan><tspan x="0" y="10.2">arithmetic in tests becomes unreliable.</tspan></text>
+  <text class="st6" transform="translate(82.56 244.6)"><tspan x="0" y="0">Fix: all seed transactions carry idempotencyKey prefixed &apos;seed-&apos;. Before inserting, deleteMany({ WHERE idempotencyKey STARTS WITH &apos;seed-&apos; }) </tspan><tspan x="0" y="10.2">wipes only seed rows — live transactions are safe.</tspan></text>
+  <circle class="st15" cx="43.16" cy="285.6" r="10"/>
+  <text class="st2" transform="translate(40.46 289.6)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st19" x="68.56" y="265.6" width="812.92" height="64" rx="6" ry="6"/>
+  <rect class="st21" x="68.56" y="265.6" width="812.92" height="24" rx="6" ry="6"/>
+  <rect class="st21" x="68.56" y="281.6" width="694" height="8"/>
+  <text class="st2" transform="translate(82.56 280.6)"><tspan x="0" y="0">Seed transactions all showed today&apos;s date — randomDate() had no effect</tspan></text>
+  <text class="st1" transform="translate(464.92 280.6)"><tspan x="0" y="0">fix: @updatedAt removed, createdAt set manually</tspan></text>
+  <text class="st8" transform="translate(82.56 297.6)"><tspan x="0" y="0">Prisma&apos;s @default(now()) and @updatedAt directives override any value passed in the create data — the field ignores the script&apos;s randomDate() value entirely.</tspan></text>
+  <text class="st6" transform="translate(82.56 311.6)"><tspan x="0" y="0">Fix: passed createdAt and updatedAt explicitly in the create data block. Prisma respects manually passed values when the field has no @updatedAt — </tspan><tspan x="0" y="10.2">removed that directive from the Transaction model.</tspan></text>
+  <circle class="st13" cx="43.16" cy="355.6" r="10"/>
+  <text class="st9" transform="translate(40.46 359.6)"><tspan x="0" y="0">+</tspan></text>
+  <rect class="st19" x="68.56" y="335.6" width="812.97" height="64" rx="6" ry="6"/>
+  <rect class="st17" x="68.56" y="335.6" width="812.97" height="24" rx="6" ry="6"/>
+  <rect class="st17" x="68.56" y="351.6" width="694" height="8"/>
+  <text class="st9" transform="translate(82.56 350.6)"><tspan x="0" y="0">Seed balances do not reflect the seeded transaction history — intentional</tspan></text>
+  <text class="st1" transform="translate(488.13 350.6)"><tspan x="0" y="0">design decision: set balances directly</tspan></text>
+  <text class="st8" transform="translate(82.56 365.6)"><tspan x="0" y="0">Running 6 transactions through sendMoney() would update balances correctly but couples the seed to the entire middleware stack. </tspan><tspan x="0" y="10.2">Any bug in the stack breaks seeding.</tspan></text>
+  <text class="st6" transform="translate(82.56 385.6)"><tspan x="0" y="0">Fix: balances are set directly on accounts. Transaction records are created independently. The seed is self-contained — it only needs Prisma, </tspan><tspan x="0" y="10.2">not a running server. This is the correct pattern for seed scripts.</tspan></text>
+  <circle class="st13" cx="43.16" cy="425.6" r="10"/>
+  <text class="st9" transform="translate(40.46 429.6)"><tspan x="0" y="0">+</tspan></text>
+  <rect class="st19" x="68.56" y="405.6" width="812.92" height="52" rx="6" ry="6"/>
+  <rect class="st17" x="68.56" y="405.6" width="812.92" height="24" rx="6" ry="6"/>
+  <rect class="st11" x="68.56" y="421.6" width="694" height="8"/>
+  <text class="st9" transform="translate(82.56 420.6)"><tspan x="0" y="0">Seed takes ~3 seconds — looks like a hang</tspan></text>
+  <text class="st1" transform="translate(509.73 420.6)"><tspan x="0" y="0">expected: bcrypt cost factor 12</tspan></text>
+  <text class="st8" transform="translate(82.56 432.6)"><tspan x="0" y="0">bcrypt at cost factor 12 takes ~300ms per hash. Three users = ~900ms of hashing before any database writes. This is correct — the same cost factor </tspan><tspan x="0" y="10.2">used in production auth.</tspan></text>
+  <text class="st8" transform="translate(82.56 451.6)"><tspan x="0" y="0">Not a bug. Not worth lowering the cost factor for seed — it would create an inconsistency between seed passwords and the password hashing used at runtime.</tspan></text>
+  <line class="st18" x1="28.18" y1="463" x2="875.53" y2="463"/>
+  <text class="st4" transform="translate(80.34 476.8)"><tspan x="0" y="0">red = crash / bug</tspan></text>
+  <text class="st3" transform="translate(210.34 476.8)"><tspan x="0" y="0">yellow = data integrity risk</tspan></text>
+  <text class="st5" transform="translate(380.34 476.8)"><tspan x="0" y="0">blue = design / expected behaviour</tspan></text>
+  <text class="st1" transform="translate(659.52 476.8)"><tspan x="0" y="0">phase9-challenges.svg</tspan></text>
+</svg>
