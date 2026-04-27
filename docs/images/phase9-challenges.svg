@@ -113,7 +113,7 @@
       }
     </style>
   </defs>
-  <rect class="st16" x="25.94" y="554" width="900" height="488"/>
+  <rect class="st16" width="900" height="488"/>
   <text class="st0" transform="translate(161.65 17)"><tspan x="0" y="0">FINPAY API — PHASE 9 ENGINEERING CHALLENGES</tspan></text>
   <line class="st18" x1="37.53" y1="27" x2="875.49" y2="26.97"/>
   <text class="st10" transform="translate(142.14 43)"><tspan x="0" y="0">Seed design decisions and a late-phase routing bug surfaced during smoke testing</tspan></text>
