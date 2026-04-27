@@ -243,55 +243,6 @@ node -e "
 
 ---
 
-## Commit 7
-
-```bash
-git add src/services/
-git commit -m "feat: add service layer — auth, account, transaction
-
-auth.service.js:
-- register(): user + account created atomically in one $transaction
-- login(): unified error prevents account enumeration
-- Email normalised on register and login
-- bcrypt cost factor 12
-
-account.service.js:
-- Decimal -> Number conversion at service boundary
-- getAccountById() lightweight internal variant
-
-transaction.service.js:
-- sendMoney(): atomic transfer via prisma.$transaction()
-  - Pre-check + post-decrement race condition guard
-  - Limits: min R1, max R50k, no self-transfer
-- getTransactionHistory(): parallel count + data fetch
-  - Page size clamped 1-100
-  - Direction field: SENT/RECEIVED derived at query time
-- getTransaction(): 403 on ownership failure (not 404)"
-```
-
----
-
-## Git Log After Phase 7
-
-```
-feat: add service layer — auth, account, transaction
-feat: add middleware layer — auth, rate limiting, idempotency, cache, audit, error handling
-feat: add utility layer — response formatter and async handler
-feat: add configuration layer — logger, Redis, database
-fix: add all models to prisma schema
-fix: add url = env(DATABASE_URL) to prisma datasource block
-fix: downgrade to Prisma 5 — Prisma 6 incompatible with .env workflow
-fix: explicitly load .env for Prisma CLI
-fix: remove auto-generated prisma.config.ts — JS project not TS
-fix: use npx prefix for prisma scripts — CLI not in global PATH
-fix: change postgres port to 5433 to avoid conflict with system PostgreSQL
-chore: add Docker infrastructure and database schema
-chore: install dependencies and initialise Prisma
-chore: initialise project scaffold
-```
-
----
-
 ## What Comes Next — Phase 8
 
 Phase 8 wires everything together. Controllers call services and return HTTP responses. Routes map URLs to controllers and apply the correct middleware chain. `app.js` registers routes, global middleware, and Swagger. `server.js` starts the server and handles graceful shutdown.

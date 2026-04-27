@@ -192,88 +192,6 @@ railway run npx prisma migrate deploy
 railway run npx prisma db seed
 ```
 
----
-
-## Git Commit Message
-
-```bash
-git add Dockerfile .dockerignore docker-compose.yml .github/
-git commit -m "feat: add CI/CD pipeline — GitHub Actions + Docker + Railway
-
-Dockerfile (multi-stage):
-- Stage 1 (deps): npm ci --only=production + prisma generate
-  Layer cached on package*.json — rebuilds only when deps change
-- Stage 2 (runner): node:20-alpine, non-root user finpay:nodejs (uid/gid 1001)
-  Explicit COPY --from=deps node_modules AND .prisma (both required)
-  HEALTHCHECK: wget /api/v1/health every 30s
-  CMD: node src/server.js · ENV NODE_ENV=production
-
-.dockerignore:
-- node_modules · .env · logs/ · .git excluded from build context
-  Secrets never reach image layers
-
-docker-compose.yml:
-- Added app service with depends_on: postgres + redis (condition: service_healthy)
-- Internal Docker networking: DATABASE_URL uses postgres:5432 (not localhost:5433)
-- JWT_SECRET injected from host .env via \${JWT_SECRET}
-
-.github/workflows/ci.yml (every branch push):
-- PostgreSQL 15 + Redis 7 service containers with healthchecks
-- npm ci · prisma migrate deploy (not migrate dev) · prisma generate · db seed
-- node src/server.js &  → poll loop 15×2s until /health responds
-- Health check: curl + Python JSON assert success:true status:healthy
-- Smoke tests: register (201+token) · login (200+token) · auth gate (401) · 404
-- RATE_LIMIT_MAX_REQUESTS: 1000 in CI env (production: 100)
-- docker build -t finpay-api:\${{ github.sha }}
-
-.github/workflows/deploy.yml (main branch only):
-- railway up --service finpay-api --detach
-- sleep 30 · post-deploy health check against RAILWAY_URL secret
-- Runs in parallel with ci.yml — post-deploy check is the safety net"
-```
-
-Final commit after CI badge is live:
-
-```bash
-git add README.md
-git commit -m "docs: add live CI badge and Railway deployment URL
-
-CI pipeline: green on every push
-Deploy pipeline: auto-deploys on merge to main
-Live URL: https://finpay-api-xxxx.up.railway.app"
-```
-
----
-
-## Complete Git Log
-
-```
-docs: add live CI badge and Railway deployment URL
-feat: add CI/CD pipeline — GitHub Actions + Docker + Railway
-feat: add database seed and project README
-chore: phase 8 complete — server running and all endpoints verified
-fix: remove wildcard path from 404 handler — path-to-regexp v8
-feat: add app.js and server.js — server ready to run
-feat: add routes and input validators — auth, accounts, transactions
-feat: add controllers — auth, account, transaction
-feat: add service layer — auth, account, transaction
-feat: add middleware layer — auth, rate limiting, idempotency, cache, audit, error handling
-feat: add utility layer — response formatter and async handler
-feat: add configuration layer — logger, Redis, database
-fix: add all models to prisma schema
-fix: add url = env(DATABASE_URL) to prisma datasource block
-fix: downgrade to Prisma 5 — Prisma 6 incompatible with .env workflow
-fix: explicitly load .env for Prisma CLI
-fix: remove auto-generated prisma.config.ts — JS project not TS
-fix: use npx prefix for prisma scripts — CLI not in global PATH
-fix: change postgres port to 5433 to avoid conflict with system PostgreSQL
-chore: add Docker infrastructure and database schema
-chore: install dependencies and initialise Prisma
-chore: initialise project scaffold
-```
-
----
-
 ## What You Now Have
 
 | Deliverable | Status |
@@ -291,8 +209,6 @@ chore: initialise project scaffold
 | Clean git history — 22 commits telling the engineering story | Complete |
 
 ---
-
-## Interview Talking Points
 
 **On the pipeline:**
 Every push triggers a GitHub Actions workflow that spins up Postgres and Redis service containers, runs migrations, seeds the database, starts the server, and runs smoke tests against real endpoints. Merges to main auto-deploy to Railway with a post-deploy health check against the live URL. The build fails if anything in that chain returns an unexpected response.

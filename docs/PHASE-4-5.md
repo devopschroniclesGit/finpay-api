@@ -178,23 +178,6 @@ const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 ```
-
-### Commit 5
-
-```bash
-git add src/utils/response.js src/utils/asyncHandler.js
-git commit -m "feat: add utility layer — response formatter and async handler
-
-Response formatter:
-- Consistent shape on every endpoint: success, message, data, timestamp
-- Helpers: success(), error(), paginated()
-- paginated() includes hasNext/hasPrev for frontend convenience
-
-Async handler:
-- Eliminates try/catch boilerplate in every controller
-- Unhandled rejections forwarded to global error handler"
-```
-
 ---
 
 ## Full Verification
@@ -244,28 +227,6 @@ Utils OK
 
 === All checks passed. Ready for Phase 6. ===
 ```
-
----
-
-## Git Log After Phases 1–5
-
-```
-feat: add utility layer — response formatter and async handler
-feat: add configuration layer — logger, Redis, database
-fix: add all models to prisma schema
-fix: add url = env(DATABASE_URL) to prisma datasource block
-fix: downgrade to Prisma 5 — Prisma 6 incompatible with .env workflow
-fix: explicitly load .env for Prisma CLI
-fix: remove auto-generated prisma.config.ts — JS project not TS
-fix: use npx prefix for prisma scripts — CLI not in global PATH
-fix: change postgres port to 5433 to avoid conflict with system PostgreSQL
-chore: add Docker infrastructure and database schema
-chore: install dependencies and initialise Prisma
-chore: initialise project scaffold
-```
-
-This is a real engineering history. The fix commits are not noise — they document the environment constraints of the project and the decisions made to work around them. Any engineer joining the project can read this log and understand exactly what the runtime environment requires.
-
 ---
 
 ## What Comes Next — Phase 6
