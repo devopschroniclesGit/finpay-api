@@ -1,0 +1,93 @@
+<svg viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-r" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="440" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — THREE-TIER RATE LIMITING</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">All counters stored in Redis — accurate across multiple server instances</text>
+
+  <!-- ─── TIER 1: apiLimiter ─── -->
+  <rect x="44" y="74" width="258" height="270" rx="8" fill="#161b22" stroke="#fbbf24" stroke-width="1.5"/>
+  <rect x="44" y="74" width="258" height="28" rx="8" fill="#2a2010"/>
+  <rect x="44" y="94" width="258" height="8" fill="#2a2010"/>
+  <text x="173" y="93" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold">Tier 1 — apiLimiter</text>
+  <line x1="44" y1="102" x2="302" y2="102" stroke="#fbbf24" stroke-width="0.8"/>
+
+  <text x="58" y="120" fill="#8b949e" font-size="9">Applied to</text><text x="288" y="120" text-anchor="end" fill="#e6edf3" font-size="9">All /api/* routes</text>
+  <text x="58" y="136" fill="#8b949e" font-size="9">Window</text><text x="288" y="136" text-anchor="end" fill="#fbbf24" font-size="9">15 minutes</text>
+  <text x="58" y="152" fill="#8b949e" font-size="9">Max requests</text><text x="288" y="152" text-anchor="end" fill="#fbbf24" font-size="9">100</text>
+  <text x="58" y="168" fill="#8b949e" font-size="9">Per</text><text x="288" y="168" text-anchor="end" fill="#e6edf3" font-size="9">IP address</text>
+  <text x="58" y="184" fill="#8b949e" font-size="9">Status on exceed</text><text x="288" y="184" text-anchor="end" fill="#f87171" font-size="9">429 Too Many Requests</text>
+  <line x1="44" y1="192" x2="302" y2="192" stroke="#30363d" stroke-width="0.6"/>
+  <text x="58" y="208" fill="#8b949e" font-size="9">Redis prefix</text><text x="288" y="208" text-anchor="end" fill="#e6edf3" font-size="9">rl:api:</text>
+  <text x="58" y="224" fill="#8b949e" font-size="9">Headers returned</text><text x="288" y="224" text-anchor="end" fill="#e6edf3" font-size="9">X-RateLimit-*</text>
+  <line x1="44" y1="232" x2="302" y2="232" stroke="#30363d" stroke-width="0.6"/>
+  <text x="58" y="252" fill="#8b949e" font-size="8.5">Protects against general</text>
+  <text x="58" y="266" fill="#8b949e" font-size="8.5">API abuse and scraping.</text>
+  <text x="58" y="282" fill="#8b949e" font-size="8.5">100 requests per 15 min</text>
+  <text x="58" y="296" fill="#8b949e" font-size="8.5">is generous for normal</text>
+  <text x="58" y="310" fill="#8b949e" font-size="8.5">use but catches bots.</text>
+  <text x="58" y="330" fill="#fbbf24" font-size="8">All limit hits logged to Winston</text>
+
+  <!-- ─── TIER 2: authLimiter ─── -->
+  <rect x="321" y="74" width="258" height="270" rx="8" fill="#161b22" stroke="#f87171" stroke-width="1.5"/>
+  <rect x="321" y="74" width="258" height="28" rx="8" fill="#2a1010"/>
+  <rect x="321" y="94" width="258" height="8" fill="#2a1010"/>
+  <text x="450" y="93" text-anchor="middle" fill="#f87171" font-size="11" font-weight="bold">Tier 2 — authLimiter</text>
+  <line x1="321" y1="102" x2="579" y2="102" stroke="#f87171" stroke-width="0.8"/>
+
+  <text x="335" y="120" fill="#8b949e" font-size="9">Applied to</text><text x="565" y="120" text-anchor="end" fill="#e6edf3" font-size="9">/auth/login · /auth/register</text>
+  <text x="335" y="136" fill="#8b949e" font-size="9">Window</text><text x="565" y="136" text-anchor="end" fill="#f87171" font-size="9">15 minutes</text>
+  <text x="335" y="152" fill="#8b949e" font-size="9">Max requests</text><text x="565" y="152" text-anchor="end" fill="#f87171" font-size="9">10</text>
+  <text x="335" y="168" fill="#8b949e" font-size="9">Per</text><text x="565" y="168" text-anchor="end" fill="#e6edf3" font-size="9">IP address</text>
+  <text x="335" y="184" fill="#8b949e" font-size="9">Status on exceed</text><text x="565" y="184" text-anchor="end" fill="#f87171" font-size="9">429 Too Many Requests</text>
+  <line x1="321" y1="192" x2="579" y2="192" stroke="#30363d" stroke-width="0.6"/>
+  <text x="335" y="208" fill="#8b949e" font-size="9">Redis prefix</text><text x="565" y="208" text-anchor="end" fill="#e6edf3" font-size="9">rl:auth:</text>
+  <text x="335" y="224" fill="#8b949e" font-size="9">Headers returned</text><text x="565" y="224" text-anchor="end" fill="#e6edf3" font-size="9">X-RateLimit-*</text>
+  <line x1="321" y1="232" x2="579" y2="232" stroke="#30363d" stroke-width="0.6"/>
+  <text x="335" y="252" fill="#8b949e" font-size="8.5">Brute-force prevention.</text>
+  <text x="335" y="266" fill="#8b949e" font-size="8.5">An attacker trying 1000</text>
+  <text x="335" y="282" fill="#8b949e" font-size="8.5">passwords hits the wall</text>
+  <text x="335" y="296" fill="#8b949e" font-size="8.5">after 10 attempts and</text>
+  <text x="335" y="310" fill="#8b949e" font-size="8.5">waits 15 minutes.</text>
+  <text x="335" y="330" fill="#f87171" font-size="8">Tightest window on auth</text>
+
+  <!-- ─── TIER 3: transactionLimiter ─── -->
+  <rect x="598" y="74" width="258" height="270" rx="8" fill="#161b22" stroke="#c084fc" stroke-width="1.5"/>
+  <rect x="598" y="74" width="258" height="28" rx="8" fill="#1e1030"/>
+  <rect x="598" y="94" width="258" height="8" fill="#1e1030"/>
+  <text x="727" y="93" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="bold">Tier 3 — transactionLimiter</text>
+  <line x1="598" y1="102" x2="856" y2="102" stroke="#c084fc" stroke-width="0.8"/>
+
+  <text x="612" y="120" fill="#8b949e" font-size="9">Applied to</text><text x="842" y="120" text-anchor="end" fill="#e6edf3" font-size="9">/transactions (POST only)</text>
+  <text x="612" y="136" fill="#8b949e" font-size="9">Window</text><text x="842" y="136" text-anchor="end" fill="#c084fc" font-size="9">1 minute</text>
+  <text x="612" y="152" fill="#8b949e" font-size="9">Max requests</text><text x="842" y="152" text-anchor="end" fill="#c084fc" font-size="9">20</text>
+  <text x="612" y="168" fill="#8b949e" font-size="9">Per</text><text x="842" y="168" text-anchor="end" fill="#e6edf3" font-size="9">IP address</text>
+  <text x="612" y="184" fill="#8b949e" font-size="9">Status on exceed</text><text x="842" y="184" text-anchor="end" fill="#f87171" font-size="9">429 Too Many Requests</text>
+  <line x1="598" y1="192" x2="856" y2="192" stroke="#30363d" stroke-width="0.6"/>
+  <text x="612" y="208" fill="#8b949e" font-size="9">Redis prefix</text><text x="842" y="208" text-anchor="end" fill="#e6edf3" font-size="9">rl:tx:</text>
+  <text x="612" y="224" fill="#8b949e" font-size="9">Headers returned</text><text x="842" y="224" text-anchor="end" fill="#e6edf3" font-size="9">X-RateLimit-*</text>
+  <line x1="598" y1="232" x2="856" y2="232" stroke="#30363d" stroke-width="0.6"/>
+  <text x="612" y="252" fill="#8b949e" font-size="8.5">Transfer abuse prevention.</text>
+  <text x="612" y="266" fill="#8b949e" font-size="8.5">20 send-money calls per</text>
+  <text x="612" y="282" fill="#8b949e" font-size="8.5">minute per IP is higher</text>
+  <text x="612" y="296" fill="#8b949e" font-size="8.5">than any real user needs.</text>
+  <text x="612" y="310" fill="#8b949e" font-size="8.5">Shortest window (1 min).</text>
+  <text x="612" y="330" fill="#c084fc" font-size="8">Idempotency runs after this</text>
+
+  <!-- Shared Redis store note -->
+  <rect x="160" y="366" width="580" height="46" rx="6" fill="#161b22" stroke="#fbbf24" stroke-width="1"/>
+  <text x="450" y="384" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="bold">Shared Redis Store — makeStore(prefix)</text>
+  <text x="450" y="402" text-anchor="middle" fill="#8b949e" font-size="8.5">Each limiter uses a separate Redis key namespace (rl:api: / rl:auth: / rl:tx:) via a shared factory function.</text>
+  <text x="450" y="416" text-anchor="middle" fill="#8b949e" font-size="8.5">sendCommand: (...args) =&gt; redis.call(...args)   ·   Counters survive server restarts</text>
+
+  <line x1="80" y1="428" x2="820" y2="428" stroke="#30363d" stroke-width="1"/>
+  <text x="820" y="438" text-anchor="end" fill="#30363d" font-size="8">rate-limiting.svg</text>
+</svg>
