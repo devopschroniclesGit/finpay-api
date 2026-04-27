@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 900 620">
+  <!-- Generator: Adobe Illustrator 29.8.6, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6 {
+        fill: none;
+      }
+
+      .st7, .st8, .st9, .st10, .st11, .st12, .st13, .st14, .st15, .st16, .st17, .st18, .st19, .st20, .st21 {
+        isolation: isolate;
+      }
+
+      .st7, .st8, .st10, .st19, .st20 {
+        font-family: CourierNewPS-BoldMT, 'Courier New';
+        font-weight: 700;
+      }
+
+      .st7, .st11, .st22, .st13, .st19 {
+        fill: #60a5fa;
+      }
+
+      .st7, .st20 {
+        font-size: 10px;
+      }
+
+      .st23, .st24 {
+        stroke-width: 1.2px;
+      }
+
+      .st23, .st24, .st25, .st26, .st27 {
+        fill: #161b22;
+      }
+
+      .st23, .st2, .st3, .st28, .st27 {
+        stroke: #4ade80;
+      }
+
+      .st8 {
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .st8, .st21 {
+        fill: #e6edf3;
+      }
+
+      .st9 {
+        fill: #30363d;
+      }
+
+      .st9, .st11, .st12, .st13, .st14, .st15, .st16, .st17, .st18, .st21 {
+        font-family: CourierNewPSMT, 'Courier New';
+      }
+
+      .st9, .st12, .st13, .st15, .st17 {
+        font-size: 8px;
+      }
+
+      .st29 {
+        fill: #1a3a2a;
+      }
+
+      .st10, .st30, .st14, .st17, .st20 {
+        fill: #4ade80;
+      }
+
+      .st10, .st19 {
+        font-size: 11px;
+      }
+
+      .st31, .st1, .st24, .st25 {
+        stroke: #60a5fa;
+      }
+
+      .st31, .st2, .st25, .st28, .st27 {
+        stroke-width: 1.5px;
+      }
+
+      .st31, .st32, .st28 {
+        fill: #0d1117;
+      }
+
+      .st11, .st14, .st16, .st21 {
+        font-size: 8.5px;
+      }
+
+      .st1, .st3 {
+        stroke-width: .8px;
+      }
+
+      .st12 {
+        fill: #f87171;
+      }
+
+      .st4 {
+        stroke-width: .6px;
+      }
+
+      .st4, .st6, .st26 {
+        stroke: #30363d;
+      }
+
+      .st33 {
+        fill: #10203a;
+      }
+
+      .st15, .st16, .st18 {
+        fill: #8b949e;
+      }
+
+      .st5 {
+        stroke: #f87171;
+        stroke-dasharray: 3 2;
+      }
+
+      .st18 {
+        font-size: 9px;
+        letter-spacing: .11em;
+      }
+    </style>
+  </defs>
+  <rect class="st32" width="900" height="620"/>
+  <text class="st8" transform="translate(240.97 34)"><tspan x="0" y="0">FINPAY API — CI/CD PIPELINE (PHASE 10)</tspan></text>
+  <line class="st6" x1="80" y1="44" x2="820" y2="44"/>
+  <text class="st18" transform="translate(145.96 60)"><tspan x="0" y="0">ci.yml runs on every branch push · deploy.yml runs on merge to main only · both run in parallel</tspan></text>
+  <rect class="st27" x="310" y="70" width="280" height="44" rx="6" ry="6"/>
+  <text class="st10" transform="translate(383.99 88)"><tspan x="0" y="0">git push origin main</tspan></text>
+  <text class="st16" transform="translate(332.68 105)"><tspan x="0" y="0">GitHub receives push → triggers both workflows</tspan></text>
+  <line class="st2" x1="450" y1="114" x2="450" y2="130"/>
+  <line class="st2" x1="230" y1="130" x2="672" y2="130"/>
+  <path class="st0" d=""/>
+  <polygon class="st30" points="235.25 133 230 148 224.75 133 235.25 133"/>
+  <path class="st30" d="M230,148" marker-end="url(#arrow)"/>
+  <path class="st0" d=""/>
+  <polygon class="st22" points="677.25 133 672 148 666.75 133 677.25 133"/>
+  <path class="st22" d="M672,148" marker-end="url(#arrow-b)"/>
+  <text class="st17" transform="translate(315.6 126)"><tspan x="0" y="0">ci.yml</tspan></text>
+  <text class="st13" transform="translate(550 126)"><tspan x="0" y="0">deploy.yml</tspan></text>
+  <rect class="st28" x="44" y="148" width="372" height="380" rx="8" ry="8"/>
+  <rect class="st29" x="44" y="148" width="372" height="26" rx="8" ry="8"/>
+  <rect class="st29" x="44" y="166" width="372" height="8"/>
+  <text class="st20" transform="translate(166.99 165)"><tspan x="0" y="0">ci.yml — Test &amp; Build</tspan></text>
+  <text class="st17" transform="translate(340.39 165)"><tspan x="0" y="0">every branch</tspan></text>
+  <line class="st3" x1="44" y1="174" x2="416" y2="174"/>
+  <rect class="st26" x="62" y="182" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 196)"><tspan x="0" y="0">1.</tspan></text>
+  <text class="st21" transform="translate(84 196)"><tspan x="0" y="0">Spin up PostgreSQL 15 + Redis 7 service containers</tspan></text>
+  <text class="st17" transform="translate(340.89 203.93)"><tspan x="0" y="0">healthcheck</tspan></text>
+  <line class="st6" x1="230" y1="210" x2="230" y2="218"/>
+  <rect class="st26" x="62" y="218" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 232)"><tspan x="0" y="0">2.</tspan></text>
+  <text class="st21" transform="translate(84 232)"><tspan x="0" y="0">Checkout code · setup Node 20 · npm ci</tspan></text>
+  <line class="st6" x1="230" y1="246" x2="230" y2="254"/>
+  <rect class="st26" x="62" y="254" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 268)"><tspan x="0" y="0">3.</tspan></text>
+  <text class="st21" transform="translate(84 268)"><tspan x="0" y="0">prisma migrate deploy · prisma generate</tspan></text>
+  <line class="st6" x1="230" y1="282" x2="230" y2="290"/>
+  <rect class="st26" x="62" y="290" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 304)"><tspan x="0" y="0">4.</tspan></text>
+  <text class="st21" transform="translate(84 304)"><tspan x="0" y="0">npx prisma db seed → 3 users, 6 transactions</tspan></text>
+  <line class="st6" x1="230" y1="318" x2="230" y2="326"/>
+  <rect class="st26" x="62" y="326" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 340)"><tspan x="0" y="0">5.</tspan></text>
+  <text class="st21" transform="translate(84 340)"><tspan x="0" y="0">node src/server.js &amp; → poll /health until ready (15×2s)</tspan></text>
+  <line class="st6" x1="230" y1="354" x2="230" y2="362"/>
+  <rect class="st23" x="62" y="362" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 376)"><tspan x="0" y="0">6.</tspan></text>
+  <text class="st14" transform="translate(84 376)"><tspan x="0" y="0">Health check → JSON assert success:true status:healthy</tspan></text>
+  <line class="st6" x1="230" y1="390" x2="230" y2="398"/>
+  <rect class="st26" x="62" y="398" width="336" height="72" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 413)"><tspan x="0" y="0">7.</tspan></text>
+  <text class="st21" transform="translate(84 413)"><tspan x="0" y="0">Smoke tests</tspan></text>
+  <text class="st15" transform="translate(96 428)"><tspan x="0" y="0">POST /auth/register → 201 + token present</tspan></text>
+  <text class="st15" transform="translate(96 442)"><tspan x="0" y="0">POST /auth/login (alice) → 200 + token present</tspan></text>
+  <text class="st15" transform="translate(96 456)"><tspan x="0" y="0">GET /accounts/me (no token) → 401</tspan></text>
+  <text class="st15" transform="translate(96 470)"><tspan x="0" y="0">GET /does-not-exist → 404</tspan></text>
+  <line class="st6" x1="230" y1="470" x2="230" y2="478"/>
+  <rect class="st23" x="62" y="478" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(72 492)"><tspan x="0" y="0">8.</tspan></text>
+  <text class="st14" transform="translate(84 492)"><tspan x="0" y="0">docker build -t finpay-api:${{ github.sha }} .</tspan></text>
+  <line class="st5" x1="416" y1="430" x2="450" y2="430"/>
+  <text class="st12" transform="translate(454 426)"><tspan x="0" y="0">any step fails</tspan></text>
+  <text class="st12" transform="translate(454 438)"><tspan x="0" y="0">→ build fails</tspan></text>
+  <text class="st12" transform="translate(454 450)"><tspan x="0" y="0">→ badge red</tspan></text>
+  <text class="st12" transform="translate(454 462)"><tspan x="0" y="0">→ merge blocked</tspan></text>
+  <rect class="st31" x="484" y="148" width="372" height="248" rx="8" ry="8"/>
+  <rect class="st33" x="484" y="148" width="372" height="26" rx="8" ry="8"/>
+  <rect class="st33" x="484" y="166" width="372" height="8"/>
+  <text class="st7" transform="translate(588.99 165)"><tspan x="0" y="0">deploy.yml — Railway Deploy</tspan></text>
+  <text class="st13" transform="translate(804.79 165)"><tspan x="0" y="0">main only</tspan></text>
+  <line class="st1" x1="484" y1="174" x2="856" y2="174"/>
+  <rect class="st26" x="502" y="182" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(512 196)"><tspan x="0" y="0">1.</tspan></text>
+  <text class="st21" transform="translate(524 196)"><tspan x="0" y="0">Checkout code</tspan></text>
+  <line class="st6" x1="670" y1="210" x2="670" y2="218"/>
+  <rect class="st26" x="502" y="218" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(512 232)"><tspan x="0" y="0">2.</tspan></text>
+  <text class="st21" transform="translate(524 232)"><tspan x="0" y="0">npm install -g @railway/cli</tspan></text>
+  <line class="st6" x1="670" y1="246" x2="670" y2="254"/>
+  <rect class="st24" x="502" y="254" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(512 268)"><tspan x="0" y="0">3.</tspan></text>
+  <text class="st11" transform="translate(524 268)"><tspan x="0" y="0">railway up --service finpay-api --detach</tspan></text>
+  <text class="st15" transform="translate(739.98 268)"><tspan x="0" y="0">RAILWAY_TOKEN secret</tspan></text>
+  <line class="st6" x1="670" y1="282" x2="670" y2="290"/>
+  <rect class="st26" x="502" y="290" width="336" height="28" rx="4" ry="4"/>
+  <text class="st16" transform="translate(512 304)"><tspan x="0" y="0">4.</tspan></text>
+  <text class="st21" transform="translate(524 304)"><tspan x="0" y="0">sleep 30 — wait for Railway to propagate</tspan></text>
+  <line class="st6" x1="670" y1="318" x2="670" y2="326"/>
+  <rect class="st24" x="502" y="326" width="336" height="44" rx="4" ry="4"/>
+  <text class="st16" transform="translate(512 342)"><tspan x="0" y="0">5.</tspan></text>
+  <text class="st11" transform="translate(524 342)"><tspan x="0" y="0">curl RAILWAY_URL/api/v1/health</tspan></text>
+  <text class="st15" transform="translate(524 357)"><tspan x="0" y="0">JSON assert: success == True → live API confirmed</tspan></text>
+  <text class="st15" transform="translate(749.59 342)"><tspan x="0" y="0">RAILWAY_URL secret</tspan></text>
+  <rect class="st25" x="484" y="416" width="372" height="90" rx="8" ry="8"/>
+  <text class="st19" transform="translate(623.79 436)"><tspan x="0" y="0">Railway (Live)</tspan></text>
+  <line class="st4" x1="484" y1="442" x2="856" y2="442"/>
+  <text class="st16" transform="translate(498 458)"><tspan x="0" y="0">finpay-api service · PostgreSQL managed · Redis managed</tspan></text>
+  <text class="st16" transform="translate(498 472)"><tspan x="0" y="0">DATABASE_URL + REDIS_URL auto-injected by Railway</tspan></text>
+  <text class="st16" transform="translate(498 486)"><tspan x="0" y="0">JWT_SECRET + app vars set in Railway Variables tab</tspan></text>
+  <text class="st14" transform="translate(498 500)"><tspan x="0" y="0">https://finpay-api-xxxx.up.railway.app/api/docs</tspan></text>
+  <path class="st0" d=""/>
+  <polygon class="st22" points="675.25 401 670 416 664.75 401 675.25 401"/>
+  <path class="st22" d="M670,416" marker-end="url(#arrow-b)"/>
+  <rect class="st23" x="44" y="548" width="812" height="44" rx="6" ry="6"/>
+  <text class="st20" transform="translate(58 566)"><tspan x="0" y="0">Result: green CI badge on README · live public API · Swagger docs on the internet</tspan></text>
+  <text class="st16" transform="translate(58 582)"><tspan x="0" y="0">Every future push auto-tests · every merge to main auto-deploys · 20-commit engineering history visible on GitHub</tspan></text>
+  <path class="st0" d=""/>
+  <polygon class="st30" points="234.2 536 230 548 225.8 536 234.2 536"/>
+  <path class="st30" d="M230,548" marker-end="url(#arrow)"/>
+  <path class="st0" d=""/>
+  <polygon class="st22" points="674.2 536 670 548 665.8 536 674.2 536"/>
+  <path class="st22" d="M670,548" marker-end="url(#arrow-b)"/>
+  <text class="st9" transform="translate(738.39 610)"><tspan x="0" y="0">cicd-pipeline.svg</tspan></text>
+</svg>

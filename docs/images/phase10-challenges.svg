@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 900 506">
+  <!-- Generator: Adobe Illustrator 29.8.6, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e6edf3;
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10 {
+        isolation: isolate;
+      }
+
+      .st0, .st2, .st7, .st9 {
+        font-family: CourierNewPS-BoldMT, 'Courier New';
+        font-weight: 700;
+      }
+
+      .st1 {
+        fill: #30363d;
+      }
+
+      .st1, .st3, .st4, .st5 {
+        font-size: 8px;
+      }
+
+      .st1, .st3, .st4, .st5, .st6, .st8, .st10 {
+        font-family: CourierNewPSMT, 'Courier New';
+      }
+
+      .st2, .st4 {
+        fill: #f87171;
+      }
+
+      .st2, .st7, .st9, .st10 {
+        font-size: 9px;
+      }
+
+      .st3, .st7 {
+        fill: #fbbf24;
+      }
+
+      .st11 {
+        fill: #2a2010;
+        stroke: #fbbf24;
+      }
+
+      .st11, .st12, .st13, .st14 {
+        stroke-width: 1.5px;
+      }
+
+      .st5, .st9 {
+        fill: #60a5fa;
+      }
+
+      .st15 {
+        fill: #0d1117;
+      }
+
+      .st6 {
+        fill: #4ade80;
+      }
+
+      .st6, .st8 {
+        font-size: 8.5px;
+      }
+
+      .st12 {
+        stroke: #60a5fa;
+      }
+
+      .st12, .st16 {
+        fill: #10203a;
+      }
+
+      .st13, .st17 {
+        fill: none;
+      }
+
+      .st13, .st17, .st18 {
+        stroke: #30363d;
+      }
+
+      .st8, .st10 {
+        fill: #8b949e;
+      }
+
+      .st19 {
+        fill: #1e1a10;
+      }
+
+      .st18 {
+        fill: #161b22;
+      }
+
+      .st20 {
+        fill: #1e1010;
+      }
+
+      .st10 {
+        letter-spacing: .11em;
+      }
+
+      .st14 {
+        fill: #2a1010;
+        stroke: #f87171;
+      }
+    </style>
+  </defs>
+  <rect class="st15" width="900" height="506"/>
+  <text class="st0" transform="translate(207.97 34)"><tspan x="0" y="0">FINPAY API — PHASE 10 ENGINEERING CHALLENGES</tspan></text>
+  <line class="st17" x1="80" y1="44" x2="820" y2="44"/>
+  <text class="st10" transform="translate(238.77 60)"><tspan x="0" y="0">Pipeline, Docker, and deployment problems encountered and resolved</tspan></text>
+  <line class="st13" x1="46.74" y1="69" x2="46.74" y2="465"/>
+  <circle class="st14" cx="46.74" cy="89" r="10"/>
+  <text class="st2" transform="translate(44.04 93)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="72.74" y="69" width="802.26" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="69" width="802.26" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="85" width="694" height="8"/>
+  <text class="st2" transform="translate(86.74 84)"><tspan x="0" y="0">CI failed — prisma migrate dev requires interactive input in non-interactive shell</tspan></text>
+  <text class="st1" transform="translate(540.59 84)"><tspan x="0" y="0">fix: use migrate deploy in CI</tspan></text>
+  <text class="st8" transform="translate(86.74 98)"><tspan x="0" y="0">prisma migrate dev prompts for a migration name when it detects schema drift. GitHub Actions has no TTY — the prompt hangs and the job times out </tspan><tspan x="0" y="10.2">after the default 6-hour limit.</tspan></text>
+  <text class="st6" transform="translate(86.74 117)"><tspan x="0" y="0">Fix: CI uses prisma migrate deploy which applies existing migrations without prompting. migrate dev is only for local development. </tspan><tspan x="0" y="10.2">migrate deploy is the production and CI command.</tspan></text>
+  <circle class="st14" cx="46.74" cy="159" r="10"/>
+  <text class="st2" transform="translate(44.04 163)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="72.74" y="139" width="802.26" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="139" width="802.26" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="155" width="694" height="8"/>
+  <text class="st2" transform="translate(86.74 154)"><tspan x="0" y="0">App container could not connect to PostgreSQL — wrong port in DATABASE_URL</tspan></text>
+  <text class="st1" transform="translate(497.19 151)"><tspan x="0" y="0">fix: internal Docker networking uses 5432 not 5433</tspan></text>
+  <text class="st8" transform="translate(86.74 168)"><tspan x="0" y="0">The VM uses 5433:5432 to avoid conflict with system PostgreSQL. The 5433 is the HOST port. Inside Docker Compose, the app service </tspan><tspan x="0" y="10.2">resolves postgres by container name and uses the INTERNAL port 5432.</tspan></text>
+  <text class="st6" transform="translate(86.74 188)"><tspan x="0" y="0">Fix: docker-compose.yml app service DATABASE_URL uses postgres:5432 (internal). Local .env still uses localhost:5433 (external). </tspan><tspan x="0" y="10.2">Both are correct — different networking contexts.</tspan></text>
+  <circle class="st11" cx="46.74" cy="229" r="10"/>
+  <text class="st7" transform="translate(44.04 233)"><tspan x="0" y="0">~</tspan></text>
+  <rect class="st18" x="72.74" y="209" width="802.26" height="64" rx="6" ry="6"/>
+  <rect class="st19" x="72.74" y="209" width="802.26" height="24" rx="6" ry="6"/>
+  <rect class="st19" x="72.74" y="225" width="694" height="8"/>
+  <text class="st7" transform="translate(86.74 224)"><tspan x="0" y="0">CI health check step ran before the server finished starting — connection refused</tspan></text>
+  <text class="st1" transform="translate(541.44 224)"><tspan x="0" y="0">fix: poll loop with 15 × 2s retries</tspan></text>
+  <text class="st8" transform="translate(86.74 237)"><tspan x="0" y="0">node src/server.js &amp; starts the server in the background. The next CI step runs immediately — before Prisma has connected, before Redis is ready, </tspan><tspan x="0" y="10.2">before the HTTP port is open.</tspan></text>
+  <text class="st6" transform="translate(86.74 258)"><tspan x="0" y="0">Fix: a shell loop polls curl -sf /health for up to 30 seconds before the health check step runs. If the server is not ready in 15 attempts (× 2s), </tspan><tspan x="0" y="10.2">the job fails with a clear timeout message.</tspan></text>
+  <circle class="st11" cx="46.74" cy="299" r="10"/>
+  <text class="st7" transform="translate(44.04 303)"><tspan x="0" y="0">~</tspan></text>
+  <rect class="st18" x="72.74" y="279" width="801.91" height="64" rx="6" ry="6"/>
+  <rect class="st19" x="72.74" y="279" width="801.91" height="24" rx="6" ry="6"/>
+  <rect class="st19" x="72.74" y="295" width="694" height="8"/>
+  <text class="st7" transform="translate(86.74 294)"><tspan x="0" y="0">Deploy triggered before CI smoke tests passed — bad code deployed to Railway</tspan></text>
+  <text class="st1" transform="translate(529.06 294)"><tspan x="0" y="0">design decision: needs: [] acknowledged</tspan></text>
+  <text class="st8" transform="translate(86.74 307)"><tspan x="0" y="0">deploy.yml has needs: [] meaning it runs independently of ci.yml on the same push. If CI fails after deploy starts, broken code is already on Railway. </tspan><tspan x="0" y="10.2">The post-deploy health check is the only safety net.</tspan></text>
+  <text class="st6" transform="translate(86.74 328)"><tspan x="0" y="0">Accepted trade-off: adding needs: [test] would require both workflows in the same file. Kept separate for clarity. </tspan><tspan x="0" y="10.2">The post-deploy health check catches most issues. Full sequential gating is a Phase 11 improvement.</tspan></text>
+  <circle class="st14" cx="46.74" cy="369" r="10"/>
+  <text class="st2" transform="translate(44.04 373)"><tspan x="0" y="0">!</tspan></text>
+  <rect class="st18" x="72.74" y="349" width="801.91" height="64" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="349" width="801.91" height="24" rx="6" ry="6"/>
+  <rect class="st20" x="72.74" y="365" width="694" height="8"/>
+  <text class="st2" transform="translate(86.74 364)"><tspan x="0" y="0">CI smoke tests hit 429 — rate limiter blocked the test runner</tspan></text>
+  <text class="st1" transform="translate(431.69 364)"><tspan x="0" y="0">fix: raise RATE_LIMIT_MAX_REQUESTS to 1000 in CI env</tspan></text>
+  <text class="st8" transform="translate(86.74 377)"><tspan x="0" y="0">The auth limiter (10 req/15min) was triggered by repeated register and login calls during CI. With the same IP address making all requests, </tspan><tspan x="0" y="10.2">the limiter fired before all smoke tests could complete.</tspan></text>
+  <text class="st6" transform="translate(86.74 398)"><tspan x="0" y="0">Fix: CI env sets RATE_LIMIT_MAX_REQUESTS: 1000. This raises the global limiter ceiling only in the CI environment. </tspan><tspan x="0" y="10.2">Production and local dev still enforce the real limits. Separately, CI uses a unique ci-test email to avoid auth limiter conflicts.</tspan></text>
+  <circle class="st12" cx="46.74" cy="439" r="10"/>
+  <text class="st9" transform="translate(44.04 443)"><tspan x="0" y="0">+</tspan></text>
+  <rect class="st18" x="72.74" y="419" width="801.91" height="65.02" rx="6" ry="6"/>
+  <rect class="st16" x="72.74" y="419" width="801.91" height="24" rx="6" ry="6"/>
+  <rect class="st16" x="72.74" y="435" width="694" height="8"/>
+  <text class="st9" transform="translate(86.74 434)"><tspan x="0" y="0">Container crashed on startup — Prisma client missing from final image</tspan></text>
+  <text class="st1" transform="translate(480.31 434)"><tspan x="0" y="0">fix: explicit COPY --from=deps .prisma</tspan></text>
+  <text class="st8" transform="translate(86.74 448)"><tspan x="0" y="0">prisma generate outputs the client to node_modules/.prisma. The COPY --from=deps node_modules copies node_modules but not the hidden </tspan><tspan x="0" y="10.2">.prisma subdirectory in all environments.</tspan></text>
+  <text class="st8" transform="translate(86.74 469)"><tspan x="0" y="0">Fix: added an explicit COPY --from=deps /app/node_modules/.prisma ./node_modules/.prisma line in the runner stage. </tspan><tspan x="0" y="10.2">Both copy statements are required. Missing either one causes a runtime crash.</tspan></text>
+  <line class="st17" x1="67.71" y1="487.5" x2="807.71" y2="487.5"/>
+  <text class="st4" transform="translate(127.71 497.5)"><tspan x="0" y="0">red = crash / build failure</tspan></text>
+  <text class="st3" transform="translate(307.71 497.5)"><tspan x="0" y="0">yellow = pipeline logic risk</tspan></text>
+  <text class="st5" transform="translate(477.71 497.5)"><tspan x="0" y="0">blue = container / runtime design</tspan></text>
+  <text class="st1" transform="translate(702.09 497.5)"><tspan x="0" y="0">phase10-challenges.svg</tspan></text>
+</svg>

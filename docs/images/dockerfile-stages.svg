@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 900 460">
+  <!-- Generator: Adobe Illustrator 29.8.6, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4 {
+        fill: none;
+      }
+
+      .st5 {
+        font-size: 15px;
+        letter-spacing: .13em;
+      }
+
+      .st5, .st6, .st7, .st8, .st9, .st10, .st11, .st12, .st13, .st14, .st15, .st16, .st17, .st18, .st19, .st20 {
+        isolation: isolate;
+      }
+
+      .st5, .st7, .st10, .st14, .st15 {
+        font-family: CourierNewPS-BoldMT, 'Courier New';
+        font-weight: 700;
+      }
+
+      .st5, .st20 {
+        fill: #e6edf3;
+      }
+
+      .st21 {
+        stroke: #c084fc;
+      }
+
+      .st21, .st22, .st23, .st24, .st25 {
+        fill: #0d1117;
+      }
+
+      .st6 {
+        fill: #30363d;
+      }
+
+      .st6, .st8, .st9, .st11, .st12, .st13, .st16, .st17, .st18, .st19, .st20 {
+        font-family: CourierNewPSMT, 'Courier New';
+      }
+
+      .st6, .st8, .st13, .st16 {
+        font-size: 8px;
+      }
+
+      .st1, .st26 {
+        stroke: #fbbf24;
+      }
+
+      .st1, .st2 {
+        stroke-width: .8px;
+      }
+
+      .st27 {
+        fill: #1a3a2a;
+      }
+
+      .st26, .st28 {
+        fill: #161b22;
+        stroke-width: 1.5px;
+      }
+
+      .st7, .st10, .st29, .st12, .st16 {
+        fill: #4ade80;
+      }
+
+      .st7, .st14 {
+        font-size: 11px;
+      }
+
+      .st8, .st9, .st14 {
+        fill: #fbbf24;
+      }
+
+      .st22, .st3, .st4 {
+        stroke: #30363d;
+      }
+
+      .st9, .st10, .st12, .st15, .st19, .st20 {
+        font-size: 8.5px;
+      }
+
+      .st2, .st24, .st28 {
+        stroke: #4ade80;
+      }
+
+      .st11, .st13, .st17, .st18 {
+        fill: #8b949e;
+      }
+
+      .st11, .st18 {
+        font-size: 9px;
+      }
+
+      .st30 {
+        fill: #2a2010;
+      }
+
+      .st3 {
+        stroke-width: .6px;
+      }
+
+      .st25 {
+        stroke: #f87171;
+      }
+
+      .st15 {
+        fill: #f87171;
+      }
+
+      .st17 {
+        font-size: 7.5px;
+      }
+
+      .st18 {
+        letter-spacing: .11em;
+      }
+
+      .st19 {
+        fill: #c084fc;
+      }
+    </style>
+  </defs>
+  <rect class="st23" width="900" height="460"/>
+  <text class="st5" transform="translate(196.97 34)"><tspan x="0" y="0">FINPAY API — MULTI-STAGE DOCKERFILE (PHASE 10)</tspan></text>
+  <line class="st4" x1="80" y1="44" x2="820" y2="44"/>
+  <text class="st18" transform="translate(149.16 60)"><tspan x="0" y="0">Two build stages — only production artefacts reach the final image · no dev tools · no secrets</tspan></text>
+  <rect class="st26" x="44" y="72" width="360" height="272" rx="8" ry="8"/>
+  <rect class="st30" x="44" y="72" width="360" height="26" rx="8" ry="8"/>
+  <rect class="st30" x="44" y="90" width="360" height="8"/>
+  <text class="st14" transform="translate(165.26 83.94)"><tspan x="0" y="0">Stage 1 — deps</tspan></text>
+  <text class="st8" transform="translate(266.38 89)"><tspan x="0" y="0">FROM node:20-alpine AS deps</tspan></text>
+  <line class="st1" x1="44" y1="98" x2="404" y2="98"/>
+  <text class="st11" transform="translate(58 116)"><tspan x="0" y="0">WORKDIR /app</tspan></text>
+  <rect class="st22" x="58" y="124" width="330" height="34" rx="4" ry="4"/>
+  <text class="st20" transform="translate(68 138)"><tspan x="0" y="0">COPY package*.json ./</tspan></text>
+  <text class="st20" transform="translate(68 152)"><tspan x="0" y="0">COPY prisma ./prisma/</tspan></text>
+  <rect class="st22" x="58" y="166" width="330" height="44" rx="4" ry="4"/>
+  <text class="st20" transform="translate(68 180)"><tspan x="0" y="0">RUN npm ci --only=production</tspan></text>
+  <text class="st13" transform="translate(68 194)"><tspan x="0" y="0">only production deps — no nodemon, no test libs</tspan></text>
+  <text class="st13" transform="translate(68 206)"><tspan x="0" y="0">uses package-lock.json for exact reproducible installs</tspan></text>
+  <rect class="st22" x="58" y="218" width="330" height="34" rx="4" ry="4"/>
+  <text class="st20" transform="translate(68 232)"><tspan x="0" y="0">RUN npx prisma generate</tspan></text>
+  <text class="st13" transform="translate(68 246)"><tspan x="0" y="0">generates Prisma client into node_modules/.prisma</tspan></text>
+  <line class="st3" x1="44" y1="260" x2="404" y2="260"/>
+  <text class="st9" transform="translate(58 276)"><tspan x="0" y="0">This stage has: source code · package files · generated client</tspan></text>
+  <text class="st9" transform="translate(58 290)"><tspan x="0" y="0">Only node_modules is copied forward — source stays here</tspan></text>
+  <text class="st13" transform="translate(58 304)"><tspan x="0" y="0">Layer is cached — rebuilds only when package*.json changes</tspan></text>
+  <text class="st13" transform="translate(58 318)"><tspan x="0" y="0">Cache miss = full reinstall · Cache hit = seconds not minutes</tspan></text>
+  <path class="st0" d=""/>
+  <polygon class="st29" points="481 202.75 496 208 481 213.25 481 202.75"/>
+  <path class="st29" d="M496,208" marker-end="url(#arrow)"/>
+  <text class="st16" transform="translate(440.4 200)"><tspan x="0" y="0">COPY</tspan></text>
+  <text class="st16" transform="translate(423.6 212)"><tspan x="0" y="0">--from=deps</tspan></text>
+  <text class="st16" transform="translate(421.2 224)"><tspan x="0" y="0">node_modules</tspan></text>
+  <rect class="st28" x="496" y="72" width="360" height="272" rx="8" ry="8"/>
+  <rect class="st27" x="496" y="72" width="360" height="26" rx="8" ry="8"/>
+  <rect class="st27" x="496" y="90" width="360" height="8"/>
+  <text class="st7" transform="translate(578 85.62)"><tspan x="0" y="0">Stage 2 — runner (final image)</tspan></text>
+  <text class="st16" transform="translate(704.02 94.42)"><tspan x="0" y="0">FROM node:20-alpine AS runner</tspan></text>
+  <line class="st2" x1="496" y1="98" x2="856" y2="98"/>
+  <rect class="st21" x="510" y="106" width="330" height="44" rx="4" ry="4"/>
+  <text class="st19" transform="translate(520 120)"><tspan x="0" y="0">RUN addgroup --system nodejs (gid 1001)</tspan></text>
+  <text class="st19" transform="translate(520 134)"><tspan x="0" y="0">RUN adduser --system finpay (uid 1001)</tspan></text>
+  <text class="st17" transform="translate(803.99 120)"><tspan x="0" y="0">non-root</tspan></text>
+  <rect class="st22" x="510" y="158" width="330" height="34" rx="4" ry="4"/>
+  <text class="st20" transform="translate(520 172)"><tspan x="0" y="0">COPY --from=deps node_modules</tspan></text>
+  <text class="st20" transform="translate(520 186)"><tspan x="0" y="0">COPY --from=deps .prisma</tspan></text>
+  <rect class="st22" x="510" y="200" width="330" height="34" rx="4" ry="4"/>
+  <text class="st20" transform="translate(520 214)"><tspan x="0" y="0">COPY --chown=finpay:nodejs . .</tspan></text>
+  <text class="st13" transform="translate(520 228)"><tspan x="0" y="0">all source owned by non-root user</tspan></text>
+  <rect class="st24" x="510" y="242" width="330" height="34" rx="4" ry="4"/>
+  <text class="st20" transform="translate(520 256)"><tspan x="0" y="0">HEALTHCHECK --interval=30s --timeout=10s</tspan></text>
+  <text class="st13" transform="translate(520 270)"><tspan x="0" y="0">wget /api/v1/health → Docker marks unhealthy if fails</tspan></text>
+  <line class="st3" x1="496" y1="284" x2="856" y2="284"/>
+  <text class="st12" transform="translate(510 300)"><tspan x="0" y="0">USER finpay · EXPOSE 3000 · ENV NODE_ENV=production</tspan></text>
+  <text class="st12" transform="translate(510 314)"><tspan x="0" y="0">CMD [&quot;node&quot;, &quot;src/server.js&quot;]</tspan></text>
+  <text class="st13" transform="translate(510 328)"><tspan x="0" y="0">No dev dependencies · no .env · no .git · no logs/</tspan></text>
+  <text class="st13" transform="translate(510 342)"><tspan x="0" y="0">All excluded via .dockerignore before build context is sent</tspan></text>
+  <rect class="st25" x="44" y="362" width="360" height="70" rx="6" ry="6"/>
+  <text class="st15" transform="translate(58 380)"><tspan x="0" y="0">.dockerignore — never enters the build context</tspan></text>
+  <line class="st3" x1="44" y1="386" x2="404" y2="386"/>
+  <text class="st13" transform="translate(58 401)"><tspan x="0" y="0">node_modules · .env · logs/ · *.log</tspan></text>
+  <text class="st13" transform="translate(58 415)"><tspan x="0" y="0">.git · README.md · docker-compose.yml</tspan></text>
+  <text class="st13" transform="translate(58 429)"><tspan x="0" y="0">Secrets never in image · image is safe to push to any registry</tspan></text>
+  <rect class="st24" x="496" y="362" width="360" height="70" rx="6" ry="6"/>
+  <text class="st10" transform="translate(510 380)"><tspan x="0" y="0">Final image properties</tspan></text>
+  <line class="st3" x1="496" y1="386" x2="856" y2="386"/>
+  <text class="st13" transform="translate(510 401)"><tspan x="0" y="0">Base: node:20-alpine (~130MB) Production only Non-root user</tspan></text>
+  <text class="st13" transform="translate(510 415)"><tspan x="0" y="0">Tagged: finpay-api:${{ github.sha }} Reproducible</tspan></text>
+  <text class="st13" transform="translate(510 429)"><tspan x="0" y="0">Built by CI on every push — failed build = merged code is never deployed</tspan></text>
+  <text class="st6" transform="translate(719.18 452)"><tspan x="0" y="0">dockerfile-stages.svg</tspan></text>
+</svg>
