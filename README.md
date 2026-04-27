@@ -1,29 +1,36 @@
-# FinPay API 
+# FinPay API
 
-> Production-style fintech payment API platform.
-> Inspired by the backend architecture of **Stripe**, **PayFast**, and **Yoco**.
+Production-style payment API platform built with Node.js, PostgreSQL, and Redis.
+Inspired by the backend architecture of Stripe, PayFast, and Yoco.
 
-Built to demonstrate enterprise backend patterns: atomic transactions,
-idempotency keys, Redis-backed rate limiting, response caching, and
-structured audit logging.
+---
+
+## System Architecture
+
+![System Architecture](./architecture.svg)
+
+Every inbound HTTP request passes through a layered middleware pipeline before reaching business logic. JWT authentication runs first, followed by a Redis-backed rate limiter, then an idempotency check. A cache lookup follows — if the response exists in Redis the request returns early without touching the database. Only uncached requests continue to the service layer, which issues atomic Prisma queries against PostgreSQL. Winston captures structured logs at every layer.
+
+## Data Model
+
+![Data Model](./data-model.svg)
+
+The schema is built around four core tables: `users`, `accounts`, `transactions`, and `audit_logs`. Each user owns exactly one account. Transactions carry both a `senderId` and a `receiverId` foreign key into the accounts table and are written inside a Prisma `$transaction` block so the debit and credit are always atomic. Idempotency keys are stored in both Redis (for sub-millisecond lookup with a TTL) and the database (for durable audit purposes).
 
 ---
 
 ## Features
 
-| Feature | Implementation |
-|---|---|
-| JWT Authentication | Register, login, protected routes |
-| Wallet Accounts | ZAR balance management per user |
-| Atomic Transfers | `prisma.$transaction()` — debit + credit + record, all or nothing |
-| Idempotency Keys | Duplicate payment prevention backed by Redis (Stripe-style) |
-| Rate Limiting | Three-tier Redis-backed limiting (global / auth / transactions) |
-| Response Caching | Redis cache layer on read-heavy endpoints |
-| Audit Logs | Append-only trail for every state-changing action |
-| Structured Logging | Winston JSON logs with request tracing |
-| Input Validation | Field-level validation with descriptive error messages |
-| API Documentation | Swagger UI at `/api/docs` |
-| Graceful Shutdown | SIGTERM handler — safe for Docker and Kubernetes |
+- **JWT Authentication** — secure registration and login with bcryptjs password hashing
+- **Wallet Accounts** — balance management denominated in ZAR
+- **Atomic Money Transfers** — debit and credit wrapped in a single database transaction; either both succeed or both roll back
+- **Idempotency Keys** — Stripe-style duplicate payment prevention via `X-Idempotency-Key` header, backed by Redis
+- **Rate Limiting** — three-tier Redis-backed limiters: global API, strict auth, and per-transaction
+- **Response Caching** — Redis cache layer for read-heavy endpoints (account balance, transaction history)
+- **Audit Logs** — append-only log of all sensitive actions with IP address and metadata
+- **Structured Logging** — Winston JSON logs with request tracing via Morgan
+- **Swagger Docs** — interactive OpenAPI 3 documentation at `/api/docs`
+- **Docker** — PostgreSQL 15 and Redis 7 provisioned via Docker Compose
 
 ---
 
@@ -32,152 +39,147 @@ structured audit logging.
 | Layer | Technology |
 |---|---|
 | Runtime | Node.js 20 |
-| Framework | Express 5 |
+| Framework | Express |
 | Database | PostgreSQL 15 |
-| ORM | Prisma 5 |
-| Cache / Rate Limiting | Redis 7 (ioredis) |
+| ORM | Prisma |
+| Cache / Rate Limiting | Redis 7 |
 | Authentication | JWT + bcryptjs |
-| Logging | Winston |
-| Validation | express-validator |
+| Logging | Winston + Morgan |
 | Documentation | Swagger / OpenAPI 3 |
 | Containerisation | Docker Compose |
-| CI/CD | GitHub Actions |
-
----
-
-## Architecture
-Client Request
-│
-▼
-[helmet + cors]         → security headers, CORS policy
-[morgan]                → HTTP request logging (→ Winston)
-[apiLimiter]            → global rate limit (Redis)
-│
-▼
-[authenticate]          → JWT verify → req.user
-[authLimiter]           → brute force prevention (10 req/15min)
-[transactionLimiter]    → transfer abuse prevention (20 req/min)
-│
-▼
-[idempotencyCheck]      → duplicate payment prevention (Redis, 24hr TTL)
-[cache]                 → Redis response cache (configurable TTL)
-[audit]                 → append-only audit log (fires after response)
-│
-▼
-Controller → Service → Prisma ORM → PostgreSQL
 
 ---
 
 ## Quick Start
 
 ### Prerequisites
-- Node.js 20+
-- Docker Desktop
 
-### Run locally
+- Node.js v20 or higher
+- Docker Desktop
+- Git
+
+### Steps
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finpay-api.git
+git clone https://github.com/YOUR_USERNAME/finpay-api
 cd finpay-api
-
-# Copy environment variables
 cp .env.example .env
-
-# Start PostgreSQL and Redis
 docker compose up -d
-
-# Install dependencies
 npm install
-
-# Run database migrations
 npx prisma migrate dev
-
-# Seed demo data
-npm run db:seed
-
-# Start the server
+npx prisma db seed
 npm run dev
 ```
 
-API is running at `http://localhost:3000`
-Swagger docs at `http://localhost:3000/api/docs`
+The server starts on `http://localhost:3000`.
+Interactive API docs are available at `http://localhost:3000/api/docs`.
 
 ---
 
-## Demo Accounts (after seeding)
+## Environment Variables
 
-| User | Email | Password | Balance |
+Copy `.env.example` to `.env` and fill in the values. The `.env` file is gitignored and must never be committed.
+
+```
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://finpay_user:finpay_password@localhost:5432/finpay_db
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=your-secret-here
+JWT_EXPIRES_IN=7d
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+```
+
+Generate a secure JWT secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
+---
+
+## API Overview
+
+| Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
-| Alice Smith | alice@finpay.dev | Password123 | R 10,000.00 |
-| Bob Jones | bob@finpay.dev | Password123 | R 5,000.00 |
-| Charlie Dube | charlie@finpay.dev | Password123 | R 2,500.00 |
+| POST | `/api/v1/auth/register` | Create user and wallet account | No |
+| POST | `/api/v1/auth/login` | Authenticate and receive JWT | No |
+| GET | `/api/v1/accounts` | Get own account balance | Yes |
+| POST | `/api/v1/transactions` | Send money to another account | Yes |
+| GET | `/api/v1/transactions` | List transaction history | Yes |
+| GET | `/api/v1/health` | Service health check | No |
+
+Full request and response schemas are in the Swagger UI at `/api/docs`.
 
 ---
 
-## API Endpoints
+## Key Design Decisions
 
-### Auth
+**Idempotency**
+Fintech systems cannot afford duplicate charges. The `X-Idempotency-Key` header is checked in middleware before any handler runs. If the key exists in Redis, the cached response is returned immediately. New keys are written to both Redis (TTL-expiring) and PostgreSQL (durable record). This is the same pattern used by Stripe.
 
-POST /api/v1/auth/register     Register a new user
-POST /api/v1/auth/login        Login and receive JWT
-GET  /api/v1/auth/me           Get current user profile
+**Atomic Transfers**
+Money transfers use Prisma's `$transaction` block. The sender debit and receiver credit are issued as a single database transaction. If either operation fails, both roll back — no state where value leaves one account without arriving in another.
 
-### Accounts
-GET  /api/v1/accounts/me       Get wallet balance and details
-
-### Transactions
-POST /api/v1/transactions/send      Send money (requires Idempotency-Key header)
-GET  /api/v1/transactions/history   Paginated transaction history
-GET  /api/v1/transactions/:id       Single transaction details
-
-### System
-GET  /api/v1/health            Health check (used by CI/CD)
-GET  /api/docs                 Swagger UI
+**Rate Limiting**
+Three separate rate limiters are configured: a global limiter on all `/api` routes, a tighter limiter on auth endpoints to prevent brute-force, and a separate limiter on transaction endpoints. All counters are stored in Redis so they remain accurate across multiple server instances.
 
 ---
 
-## Key Engineering Decisions
+## Project Structure
 
-**Atomic transfers using `prisma.$transaction()`**
-Both the debit and credit happen inside a single database transaction.
-If either operation fails, both are rolled back — money cannot leave
-one account without arriving in another.
-
-**Post-decrement balance guard**
-After debiting the sender, the updated balance is checked for negative
-values. This catches race conditions where two concurrent transfers both
-passed the initial balance check but together exceed the available funds.
-
-**Idempotency keys namespaced by user ID**
-`idempotency:{userId}:{key}` — prevents a malicious user from using
-another user's idempotency key to retrieve their transaction response.
-
-**Three-tier rate limiting**
-Different surfaces require different limits. Auth endpoints (10 req/15min)
-are far tighter than the global API limit (100 req/15min) because brute
-force attacks target login endpoints specifically.
-
-**Generic auth error messages**
-Login returns "Invalid email or password" for both wrong email and wrong
-password. Specific messages (e.g. "email not found") allow attackers to
-enumerate which accounts exist.
-
----
-
-## CI/CD Pipeline
-
-Every push to `main` triggers a GitHub Actions workflow that:
-1. Spins up PostgreSQL and Redis services
-2. Runs database migrations
-3. Starts the server and hits the health endpoint
-4. Builds and pushes a Docker image
-5. Deploys to Railway automatically
+```
+finpay-api/
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.js
+├── src/
+│   ├── config/          database, redis, logger
+│   ├── controllers/     HTTP request and response handling
+│   ├── middleware/      auth, rate limiter, idempotency, error handler
+│   ├── routes/          URL routing
+│   ├── services/        business logic
+│   ├── utils/           response formatter, helpers
+│   ├── validators/      input validation rules
+│   ├── app.js           Express app setup
+│   └── server.js        server entry point
+├── docs/
+│   ├── architecture.svg
+│   ├── data-model.svg
+│   ├── git-workflow.svg
+│   └── docker-infrastructure.svg
+├── docker-compose.yml
+├── .env.example
+├── README.md
+└── SETUP.md
+```
 
 ---
 
-## Project Inspired By
+## Seed Data
 
-- **Stripe** — idempotency keys, structured error responses, API versioning
-- **Yoco / PayFast** — ZAR-first payment processing, merchant API patterns
-- **Wise** — observability, Redis caching for financial data
+The seed script creates two demo accounts:
 
+| Email | Password | Balance |
+|---|---|---|
+| alice@finpay.dev | password123 | ZAR 10,000.00 |
+| bob@finpay.dev | password123 | ZAR 5,000.00 |
+
+Run with `npx prisma db seed`.
+
+---
+
+## Build Guide
+
+Step-by-step setup covering Phases 1-3 (scaffolding, dependencies, Docker, and database) is in [SETUP.md](./SETUP.md).
+
+---
+
+## Roadmap
+
+- GitHub Actions CI pipeline (lint, test, build on every push)
+- Containerised Node.js app (Docker image for the API itself)
+- Deployment to Railway or Render
+- Health check integration in CI (ping `/api/v1/health` post-deploy)
+- Webhook events for transaction status changes

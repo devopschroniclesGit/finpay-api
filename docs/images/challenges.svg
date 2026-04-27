@@ -1,0 +1,94 @@
+<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="540" fill="#0d1117"/>
+  <text x="450" y="34" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="bold" letter-spacing="2">FINPAY API — ENGINEERING CHALLENGES LOG</text>
+  <line x1="80" y1="44" x2="820" y2="44" stroke="#30363d" stroke-width="1"/>
+  <text x="450" y="60" text-anchor="middle" fill="#8b949e" font-size="9" letter-spacing="1">Real problems encountered and resolved — documented in git history</text>
+
+  <!-- Vertical timeline spine -->
+  <line x1="140" y1="76" x2="140" y2="500" stroke="#30363d" stroke-width="1.5"/>
+
+  <!-- ─── CHALLENGE 1 ─── -->
+  <circle cx="140" cy="96" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="100" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="76" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="76" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="92" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="91" fill="#f87171" font-size="9" font-weight="bold">Port 5432 already in use</text>
+  <text x="766" y="91" text-anchor="end" fill="#30363d" font-size="8">fix: change postgres port to 5433</text>
+  <text x="180" y="108" fill="#8b949e" font-size="8.5">Docker could not bind port 5432 — the OL9 VM had system PostgreSQL already running on that port.</text>
+  <text x="180" y="122" fill="#4ade80" font-size="8.5">Fix: mapped Docker container to 5433 externally (5433:5432). Updated DATABASE_URL in .env to match.</text>
+
+  <!-- ─── CHALLENGE 2 ─── -->
+  <circle cx="140" cy="166" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="170" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="146" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="146" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="162" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="161" fill="#f87171" font-size="9" font-weight="bold">Prisma 6 incompatible with .env workflow</text>
+  <text x="766" y="161" text-anchor="end" fill="#30363d" font-size="8">fix: downgrade to Prisma 5</text>
+  <text x="180" y="178" fill="#8b949e" font-size="8.5">Prisma 6 introduced a new config system (prisma.config.ts) that conflicts with standard .env loading.</text>
+  <text x="180" y="192" fill="#4ade80" font-size="8.5">Fix: pinned to Prisma 5. The new config system is TypeScript-first and not appropriate for a JS project.</text>
+
+  <!-- ─── CHALLENGE 3 ─── -->
+  <circle cx="140" cy="236" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="240" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="216" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="216" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="232" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="231" fill="#f87171" font-size="9" font-weight="bold">Auto-generated prisma.config.ts in a JavaScript project</text>
+  <text x="766" y="231" text-anchor="end" fill="#30363d" font-size="8">fix: remove prisma.config.ts</text>
+  <text x="180" y="248" fill="#8b949e" font-size="8.5">Prisma 6 init generated a TypeScript config file even though the project has no TypeScript setup.</text>
+  <text x="180" y="262" fill="#4ade80" font-size="8.5">Fix: deleted prisma.config.ts. Project uses plain JavaScript — the file caused CLI parse errors.</text>
+
+  <!-- ─── CHALLENGE 4 ─── -->
+  <circle cx="140" cy="306" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="310" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="286" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="286" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="302" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="301" fill="#f87171" font-size="9" font-weight="bold">Prisma CLI not found — scripts failed without npx prefix</text>
+  <text x="766" y="301" text-anchor="end" fill="#30363d" font-size="8">fix: use npx prefix for prisma scripts</text>
+  <text x="180" y="318" fill="#8b949e" font-size="8.5">npm scripts calling prisma directly failed because the binary wasn't in the global PATH on the OL9 VM.</text>
+  <text x="180" y="332" fill="#4ade80" font-size="8.5">Fix: prefixed all prisma script entries in package.json with npx so npm resolves from node_modules/.bin.</text>
+
+  <!-- ─── CHALLENGE 5 ─── -->
+  <circle cx="140" cy="376" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="380" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="356" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="356" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="372" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="371" fill="#f87171" font-size="9" font-weight="bold">Prisma CLI not reading .env — DATABASE_URL undefined</text>
+  <text x="766" y="371" text-anchor="end" fill="#30363d" font-size="8">fix: explicitly load .env for Prisma CLI</text>
+  <text x="180" y="388" fill="#8b949e" font-size="8.5">After the Prisma 5 downgrade, the CLI stopped auto-loading .env before running migrations.</text>
+  <text x="180" y="402" fill="#4ade80" font-size="8.5">Fix: added dotenv preload via --require dotenv/config in the db:migrate script so DATABASE_URL is set.</text>
+
+  <!-- ─── CHALLENGE 6 ─── -->
+  <circle cx="140" cy="446" r="10" fill="#2a1010" stroke="#f87171" stroke-width="1.5"/>
+  <text x="140" y="450" text-anchor="middle" fill="#f87171" font-size="9" font-weight="bold">!</text>
+
+  <rect x="166" y="426" width="694" height="64" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="166" y="426" width="694" height="24" rx="6" fill="#1e1010"/>
+  <rect x="166" y="442" width="694" height="8" fill="#1e1010"/>
+  <text x="180" y="441" fill="#f87171" font-size="9" font-weight="bold">Migration failed — models missing from schema.prisma</text>
+  <text x="766" y="441" text-anchor="end" fill="#30363d" font-size="8">fix: add all models to prisma schema</text>
+  <text x="180" y="458" fill="#8b949e" font-size="8.5">Initial Prisma init left schema.prisma with only the datasource block — no User, Account, or Transaction models.</text>
+  <text x="180" y="472" fill="#4ade80" font-size="8.5">Fix: added all four models (User, Account, Transaction, AuditLog) and the TransactionStatus enum.</text>
+
+  <!-- Bottom bar -->
+  <line x1="80" y1="508" x2="820" y2="508" stroke="#30363d" stroke-width="1"/>
+  <rect x="80" y="514" width="740" height="18" rx="4" fill="#0d1117"/>
+  <text x="90" y="527" fill="#f87171" font-size="8">red dot = problem encountered</text>
+  <text x="450" y="527" text-anchor="middle" fill="#8b949e" font-size="8">Each fix committed separately with a reason — not just "what" but "why"</text>
+  <text x="862" y="527" text-anchor="end" fill="#30363d" font-size="8">challenges.svg</text>
+</svg>
