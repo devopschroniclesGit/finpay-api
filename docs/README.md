@@ -7,6 +7,8 @@ Inspired by the backend architecture of Stripe, PayFast, and Yoco.
 
 ## Architecture
 
+![FinPay API — Complete Architecture](./images/finpay-api-master.svg)
+
 ![System Architecture](./images/architecture.svg)
 
 The request pipeline flows through a layered middleware stack before reaching any business logic. Every inbound HTTP request passes through JWT authentication, a Redis-backed rate limiter, and an idempotency check before the route handler is invoked. A cache lookup follows — if the response is already stored in Redis, the request returns early without touching the database. Only uncached requests continue to the service layer, which issues atomic Prisma queries against PostgreSQL. Winston captures structured logs at every layer.
