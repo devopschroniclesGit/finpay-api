@@ -7,7 +7,7 @@ Inspired by the backend architecture of Stripe, PayFast, and Yoco.
 
 ## Architecture
 
-![FinPay API — Complete Architecture](./images/finpay-api-master.svg)
+![FinPay API — Complete Architecture](./images/finpay-api-master.png)
 
 ![System Architecture](./images/architecture.svg)
 
