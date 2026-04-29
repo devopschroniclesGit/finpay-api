@@ -7,4 +7,10 @@ const getMyAccount = asyncHandler(async (req, res) => {
   return success(res, account, 'Account details');
 });
 
-module.exports = { getMyAccount };
+const topUp = asyncHandler(async (req, res) => {
+  const { amount } = req.body;
+  const account = await accountService.topUp(req.user.id, amount);
+  return success(res, account, `R${amount} added to your wallet`);
+});
+
+module.exports = { getMyAccount, topUp };

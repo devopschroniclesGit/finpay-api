@@ -1,17 +1,12 @@
 const prisma = require('../config/database');
-
-// ── Get account ───────────────────────────────────────────────────────────────
+const { Decimal } = require('@prisma/client/runtime/library');
 
 const getAccount = async (userId) => {
   const account = await prisma.account.findUnique({
     where: { userId },
     include: {
       user: {
-        select: {
-          firstName: true,
-          lastName: true,
-          email: true,
-        },
+        select: { firstName: true, lastName: true, email: true },
       },
     },
   });
@@ -22,16 +17,8 @@ const getAccount = async (userId) => {
     throw err;
   }
 
-  // Format balance as a number for consistent API responses
-  // Prisma returns Decimal objects — convert to number for JSON serialisation
-  return {
-    ...account,
-    balance: Number(account.balance),
-  };
+  return { ...account, balance: Number(account.balance) };
 };
-
-// ── Get account summary ───────────────────────────────────────────────────────
-// Lightweight version used internally by transaction service
 
 const getAccountById = async (accountId) => {
   const account = await prisma.account.findUnique({
@@ -47,4 +34,27 @@ const getAccountById = async (accountId) => {
   return account;
 };
 
-module.exports = { getAccount, getAccountById };
+const topUp = async (userId, amount) => {
+  const topUpAmount = new Decimal(amount);
+
+  if (topUpAmount.lte(0)) {
+    const err = new Error('Top-up amount must be greater than zero');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  if (topUpAmount.gt(new Decimal('50000.00'))) {
+    const err = new Error('Maximum top-up amount is R50,000.00');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const account = await prisma.account.update({
+    where: { userId },
+    data: { balance: { increment: topUpAmount } },
+  });
+
+  return { ...account, balance: Number(account.balance) };
+};
+
+module.exports = { getAccount, getAccountById, topUp };
