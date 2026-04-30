@@ -7,11 +7,15 @@ export default defineConfig({
     outDir: 'dist',
   },
   server: {
+    host: '0.0.0.0',
+    port: 5173,
     // In dev, proxy API calls to your Express server
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+	target: 'https://127.0.0.1:3000',
         changeOrigin: true,
+	secure: false,
+	ws: false,
       }
     }
   }

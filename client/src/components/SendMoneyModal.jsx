@@ -28,7 +28,11 @@ const s = {
     fontWeight: '800',
     marginBottom: '8px',
   },
-  subtitle: { color: 'var(--text-dim)', fontSize: '14px', marginBottom: '32px' },
+  subtitle: {
+    color: 'var(--text-dim)',
+    fontSize: '14px',
+    marginBottom: '32px',
+  },
   label: {
     display: 'block',
     fontSize: '12px',
@@ -47,6 +51,7 @@ const s = {
     color: 'var(--text)',
     fontSize: '15px',
     marginBottom: '20px',
+    boxSizing: 'border-box',
   },
   amountWrap: {
     position: 'relative',
@@ -72,8 +77,13 @@ const s = {
     fontSize: '20px',
     fontFamily: 'var(--font-display)',
     fontWeight: '700',
+    boxSizing: 'border-box',
   },
-  row: { display: 'flex', gap: '12px', marginTop: '8px' },
+  row: {
+    display: 'flex',
+    gap: '12px',
+    marginTop: '8px',
+  },
   cancelBtn: {
     flex: 1,
     background: 'var(--surface2)',
@@ -84,6 +94,7 @@ const s = {
     fontSize: '15px',
     padding: '14px',
     borderRadius: '10px',
+    cursor: 'pointer',
   },
   sendBtn: {
     flex: 2,
@@ -94,18 +105,7 @@ const s = {
     fontSize: '15px',
     padding: '14px',
     borderRadius: '10px',
-  },
-  success: {
-    textAlign: 'center',
-    padding: '16px 0',
-  },
-  successIcon: { fontSize: '48px', marginBottom: '16px' },
-  successTitle: {
-    fontFamily: 'var(--font-display)',
-    fontSize: '22px',
-    fontWeight: '800',
-    color: 'var(--accent)',
-    marginBottom: '8px',
+    cursor: 'pointer',
   },
   error: {
     background: 'var(--red-dim)',
@@ -116,15 +116,31 @@ const s = {
     fontSize: '14px',
     marginBottom: '20px',
   },
+  success: {
+    textAlign: 'center',
+    padding: '16px 0',
+  },
+  successIcon: {
+    fontSize: '48px',
+    marginBottom: '16px',
+  },
+  successTitle: {
+    fontFamily: 'var(--font-display)',
+    fontSize: '22px',
+    fontWeight: '800',
+    color: 'var(--accent)',
+    marginBottom: '8px',
+  },
 }
 
 export default function SendMoneyModal({ onSuccess, onClose }) {
-  const [form, setForm]       = useState({ receiverEmail: '', amount: '', description: '' })
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
-  const [done, setDone]       = useState(false)
+  const [receiverEmail, setReceiverEmail] = useState('')
+  const [amount, setAmount]               = useState('')
+  const [description, setDescription]     = useState('')
+  const [loading, setLoading]             = useState(false)
+  const [error, setError]                 = useState('')
+  const [done, setDone]                   = useState(false)
 
-  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
   const focus = (e) => (e.target.style.borderColor = 'var(--accent)')
   const blur  = (e) => (e.target.style.borderColor = 'var(--border)')
 
@@ -132,30 +148,60 @@ export default function SendMoneyModal({ onSuccess, onClose }) {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    // Parse amount correctly — remove any commas, parse as float
+    const parsedAmount = parseFloat(String(amount).replace(',', '.'))
+
+    console.log('Submitting transfer:', {
+      receiverEmail,
+      amount: parsedAmount,
+      description,
+    })
+
+    if (isNaN(parsedAmount) || parsedAmount < 1) {
+      setError('Please enter a valid amount (minimum R1.00)')
+      setLoading(false)
+      return
+    }
+
+    if (parsedAmount > 50000) {
+      setError('Maximum transfer amount is R50,000.00')
+      setLoading(false)
+      return
+    }
+
     try {
-      await transactionAPI.send({
-        receiverEmail: form.receiverEmail,
-        amount: Number(form.amount),
-        description: form.description || undefined,
+      const res = await transactionAPI.send({
+        receiverEmail: receiverEmail.trim().toLowerCase(),
+        amount: parsedAmount,
+        description: description.trim() || undefined,
       })
+
+      console.log('Transfer success:', res.data)
       setDone(true)
       setTimeout(onSuccess, 1800)
     } catch (err) {
-      setError(err.response?.data?.message || 'Transfer failed')
+      console.error('Transfer error full:', err)
+      console.error('Transfer error response:', err.response?.data)
+      const message = err.response?.data?.message || err.message || 'Transfer failed'
+      setError(message)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div style={s.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      style={s.overlay}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div style={s.modal}>
         {done ? (
           <div style={s.success}>
             <div style={s.successIcon}>✅</div>
             <div style={s.successTitle}>Transfer Complete</div>
             <div style={{ color: 'var(--text-dim)', fontSize: '14px' }}>
-              R {Number(form.amount).toLocaleString('en-ZA', { minimumFractionDigits: 2 })} sent successfully
+              R {parseFloat(amount).toLocaleString('en-ZA', { minimumFractionDigits: 2 })} sent successfully
             </div>
           </div>
         ) : (
@@ -167,36 +213,60 @@ export default function SendMoneyModal({ onSuccess, onClose }) {
 
             <form onSubmit={submit}>
               <label style={s.label}>Recipient Email</label>
-              <input style={s.input} type="email" placeholder="recipient@example.com"
-                value={form.receiverEmail} onChange={set('receiverEmail')}
-                onFocus={focus} onBlur={blur} required />
+              <input
+                style={s.input}
+                type="email"
+                placeholder="recipient@example.com"
+                value={receiverEmail}
+                onChange={(e) => setReceiverEmail(e.target.value)}
+                onFocus={focus}
+                onBlur={blur}
+                required
+              />
 
               <label style={s.label}>Amount (ZAR)</label>
               <div style={s.amountWrap}>
                 <span style={s.amountPrefix}>R</span>
-                <input style={s.amountInput} type="number" placeholder="0.00"
-                  min="1" max="50000" step="0.01"
-                  value={form.amount} onChange={set('amount')}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
-                  required />
+                <input
+                  style={s.amountInput}
+                  type="number"
+                  placeholder="0"
+                  min="1"
+                  max="50000"
+                  step="1"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
+                  required
+                />
               </div>
 
               <label style={s.label}>Description (optional)</label>
-              <input style={s.input} type="text" placeholder="What's this for?"
-                value={form.description} onChange={set('description')}
-                onFocus={focus} onBlur={blur} maxLength={255} />
+              <input
+                style={s.input}
+                type="text"
+                placeholder="What's this for?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                onFocus={focus}
+                onBlur={blur}
+                maxLength={255}
+              />
 
               <div style={s.row}>
-                <button type="button" style={s.cancelBtn} onClick={onClose}
-                  onMouseEnter={e => e.target.style.background = 'var(--border)'}
-                  onMouseLeave={e => e.target.style.background = 'var(--surface2)'}>
+                <button
+                  type="button"
+                  style={s.cancelBtn}
+                  onClick={onClose}
+                >
                   Cancel
                 </button>
-                <button type="submit" style={{ ...s.sendBtn, opacity: loading ? 0.7 : 1 }}
+                <button
+                  type="submit"
+                  style={{ ...s.sendBtn, opacity: loading ? 0.7 : 1 }}
                   disabled={loading}
-                  onMouseEnter={e => e.target.style.background = 'var(--accent-hover)'}
-                  onMouseLeave={e => e.target.style.background = 'var(--accent)'}>
+                >
                   {loading ? 'Sending...' : 'Send Money'}
                 </button>
               </div>
