@@ -112,7 +112,6 @@ const sendMoney = async ({
     },
   });
   return txRecord;
-});
   // If ANY step throws:
   //   - The debit is rolled back
   //   - The credit is rolled back
