@@ -2,8 +2,6 @@ const { Decimal } = require('@prisma/client/runtime/library');
 const prisma = require('../config/database');
 const logger = require('../config/logger');
 
-// ── Send money ────────────────────────────────────────────────────────────────
-
 const sendMoney = async ({
   senderId,
   receiverEmail,
@@ -11,8 +9,6 @@ const sendMoney = async ({
   description,
   idempotencyKey,
 }) => {
-  // ── Input validation ──────────────────────────────────────────────────────
-
   const transferAmount = new Decimal(amount);
 
   if (transferAmount.lte(0)) {
@@ -33,8 +29,6 @@ const sendMoney = async ({
     throw err;
   }
 
-  // ── Fetch sender account ──────────────────────────────────────────────────
-
   const senderAccount = await prisma.account.findUnique({
     where: { userId: senderId },
   });
@@ -44,8 +38,6 @@ const sendMoney = async ({
     err.statusCode = 404;
     throw err;
   }
-
-  // ── Fetch receiver account ────────────────────────────────────────────────
 
   const receiverUser = await prisma.user.findUnique({
     where: { email: receiverEmail.toLowerCase().trim() },
@@ -64,8 +56,6 @@ const sendMoney = async ({
     throw err;
   }
 
-  // ── Business rule checks ──────────────────────────────────────────────────
-
   if (senderAccount.id === receiverUser.account.id) {
     const err = new Error('Cannot transfer to your own account');
     err.statusCode = 400;
@@ -78,49 +68,6 @@ const sendMoney = async ({
     throw err;
   }
 
-  // ── Atomic transfer ───────────────────────────────────────────────────────
-  //
-  // prisma.$transaction() wraps all three operations in a single DB transaction.
-  //
-// After txRecord is created, add these lines:
-
-// Get receiver's updated balance
-  const receiverUpdated = await tx.account.findUnique({
-    where: { id: receiverUser.account.id },
-  });
-
-// Write immutable ledger entries
-  await tx.ledgerEntry.create({
-    data: {
-      accountId:     senderAccount.id,
-      transactionId: txRecord.id,
-      amount:        transferAmount.negated(),
-      type:          'DEBIT',
-      description:   description || 'Transfer sent',
-      balanceAfter:  updatedSender.balance,
-    },
-  });
-
-  await tx.ledgerEntry.create({
-    data: {
-      accountId:     receiverUser.account.id,
-      transactionId: txRecord.id,
-      amount:        transferAmount,
-      type:          'CREDIT',
-      description:   description || 'Transfer received',
-      balanceAfter:  receiverUpdated.balance,
-    },
-  });
-  return txRecord;
-  // If ANY step throws:
-  //   - The debit is rolled back
-  //   - The credit is rolled back
-  //   - The transaction record is rolled back
-  //   - The database returns to its exact state before this function was called
-  //
-  // This guarantees money can never leave one account without arriving in another.
-  // This is the same guarantee that every real payment processor provides.
-
   const transaction = await prisma.$transaction(async (tx) => {
     // Step 1: Debit sender
     const updatedSender = await tx.account.update({
@@ -128,15 +75,13 @@ const sendMoney = async ({
       data: { balance: { decrement: transferAmount } },
     });
 
-    // Step 2: Guard against negative balance (belt-and-suspenders check)
-    // This catches race conditions where two concurrent transfers
-    // both passed the balance check above but together exceed the balance
+    // Step 2: Guard against negative balance
     if (new Decimal(updatedSender.balance).lt(0)) {
       throw new Error('Insufficient funds after concurrent check');
     }
 
     // Step 3: Credit receiver
-    await tx.account.update({
+    const updatedReceiver = await tx.account.update({
       where: { id: receiverUser.account.id },
       data: { balance: { increment: transferAmount } },
     });
@@ -145,12 +90,12 @@ const sendMoney = async ({
     const txRecord = await tx.transaction.create({
       data: {
         idempotencyKey: idempotencyKey || null,
-        senderId: senderAccount.id,
-        receiverId: receiverUser.account.id,
-        amount: transferAmount,
-        currency: senderAccount.currency,
-        status: 'COMPLETED',
-        description: description || null,
+        senderId:       senderAccount.id,
+        receiverId:     receiverUser.account.id,
+        amount:         transferAmount,
+        currency:       senderAccount.currency,
+        status:         'COMPLETED',
+        description:    description || null,
       },
       include: {
         sender: {
@@ -166,6 +111,29 @@ const sendMoney = async ({
       },
     });
 
+    // Step 5: Write ledger entries
+    await tx.ledgerEntry.create({
+      data: {
+        accountId:     senderAccount.id,
+        transactionId: txRecord.id,
+        amount:        transferAmount.negated(),
+        type:          'DEBIT',
+        description:   description || 'Transfer sent',
+        balanceAfter:  updatedSender.balance,
+      },
+    });
+
+    await tx.ledgerEntry.create({
+      data: {
+        accountId:     receiverUser.account.id,
+        transactionId: txRecord.id,
+        amount:        transferAmount,
+        type:          'CREDIT',
+        description:   description || 'Transfer received',
+        balanceAfter:  updatedReceiver.balance,
+      },
+    });
+
     return txRecord;
   });
 
@@ -173,7 +141,7 @@ const sendMoney = async ({
     transactionId: transaction.id,
     senderId,
     receiverEmail,
-    amount: transferAmount.toString(),
+    amount:   transferAmount.toString(),
     currency: transaction.currency,
   });
 
@@ -183,12 +151,8 @@ const sendMoney = async ({
   };
 };
 
-// ── Transaction history ───────────────────────────────────────────────────────
-
 const getTransactionHistory = async (userId, { page = 1, limit = 20 } = {}) => {
-  const account = await prisma.account.findUnique({
-    where: { userId },
-  });
+  const account = await prisma.account.findUnique({ where: { userId } });
 
   if (!account) {
     const err = new Error('Account not found');
@@ -196,19 +160,14 @@ const getTransactionHistory = async (userId, { page = 1, limit = 20 } = {}) => {
     throw err;
   }
 
-  // Clamp page size to prevent abuse (requesting 10000 records at once)
   const safeLimit = Math.min(Math.max(1, limit), 100);
-  const safePage = Math.max(1, page);
-  const skip = (safePage - 1) * safeLimit;
+  const safePage  = Math.max(1, page);
+  const skip      = (safePage - 1) * safeLimit;
 
-  // Run count and data fetch in parallel for performance
   const [transactions, total] = await Promise.all([
     prisma.transaction.findMany({
       where: {
-        OR: [
-          { senderId: account.id },
-          { receiverId: account.id },
-        ],
+        OR: [{ senderId: account.id }, { receiverId: account.id }],
       },
       orderBy: { createdAt: 'desc' },
       skip,
@@ -228,35 +187,29 @@ const getTransactionHistory = async (userId, { page = 1, limit = 20 } = {}) => {
     }),
     prisma.transaction.count({
       where: {
-        OR: [
-          { senderId: account.id },
-          { receiverId: account.id },
-        ],
+        OR: [{ senderId: account.id }, { receiverId: account.id }],
       },
     }),
   ]);
 
-  // Add a 'direction' field so the frontend knows if this was sent or received
   const enriched = transactions.map((tx) => ({
     ...tx,
-    amount: Number(tx.amount),
+    amount:    Number(tx.amount),
     direction: tx.senderId === account.id ? 'SENT' : 'RECEIVED',
   }));
 
   return {
     transactions: enriched,
     pagination: {
-      page: safePage,
-      limit: safeLimit,
+      page:       safePage,
+      limit:      safeLimit,
       total,
       totalPages: Math.ceil(total / safeLimit),
-      hasNext: safePage < Math.ceil(total / safeLimit),
-      hasPrev: safePage > 1,
+      hasNext:    safePage < Math.ceil(total / safeLimit),
+      hasPrev:    safePage > 1,
     },
   };
 };
-
-// ── Get single transaction ────────────────────────────────────────────────────
 
 const getTransaction = async (transactionId, userId) => {
   const account = await prisma.account.findUnique({ where: { userId } });
@@ -289,7 +242,6 @@ const getTransaction = async (transactionId, userId) => {
     throw err;
   }
 
-  // Users can only view their own transactions
   const belongsToUser =
     transaction.senderId === account.id ||
     transaction.receiverId === account.id;
@@ -302,7 +254,7 @@ const getTransaction = async (transactionId, userId) => {
 
   return {
     ...transaction,
-    amount: Number(transaction.amount),
+    amount:    Number(transaction.amount),
     direction: transaction.senderId === account.id ? 'SENT' : 'RECEIVED',
   };
 };
