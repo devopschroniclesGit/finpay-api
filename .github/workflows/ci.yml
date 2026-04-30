@@ -52,6 +52,7 @@ jobs:
       JWT_EXPIRES_IN: 7d
       RATE_LIMIT_WINDOW_MS: 900000
       RATE_LIMIT_MAX_REQUESTS: 1000
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
     steps:
       # ── Checkout ─────────────────────────────────────────────────────────────
