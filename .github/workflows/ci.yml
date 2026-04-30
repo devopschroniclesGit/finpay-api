@@ -68,6 +68,12 @@ jobs:
       # ── Install dependencies ──────────────────────────────────────────────────
       - name: Install dependencies
         run: npm ci
+        env:
+          PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
+          npm_config_prefer_offline: true
+
+      - name: Generate Prisma client
+          run: npx prisma generate
 
       # ── Database setup ────────────────────────────────────────────────────────
       - name: Run database migrations
