@@ -3,8 +3,6 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - 'client/**'
 
 jobs:
   deploy:
@@ -20,12 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
 
-      - name: Install and build
-        run: |
-          cd client
-          npm ci
-          npm run build
+      - name: Install client dependencies
+        run: cd client && npm ci
+
+      - name: Build client
+        run: cd client && npm run build
         env:
           VITE_API_URL: https://finpay-api-production.up.railway.app/api/v1
 

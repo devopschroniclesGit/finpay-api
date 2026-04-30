@@ -20,7 +20,7 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 app.use(cors({
-  origin: ['http://192.168.56.11:5173', 'http://localhost:5173', '*'],
+  origin: ['https://devopschroniclesgit.github.io','http://192.168.56.11:5173', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
 }));
