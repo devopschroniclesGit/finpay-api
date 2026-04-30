@@ -74,7 +74,7 @@ jobs:
           npm_config_prefer_offline: true
 
       - name: Generate Prisma client
-          run: npx prisma generate
+        run: npx prisma generate
 
       # ── Database setup ────────────────────────────────────────────────────────
       - name: Run database migrations
