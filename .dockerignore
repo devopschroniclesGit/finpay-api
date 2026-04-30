@@ -6,4 +6,5 @@ logs/
 .gitignore
 README.md
 docker-compose.yml
-.dockerignore
+client/node_modules
+client/dist

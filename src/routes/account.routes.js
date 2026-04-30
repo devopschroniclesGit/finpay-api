@@ -9,7 +9,7 @@ const { audit } = require('../middleware/auditLogger');
 router.get(
   '/me',
   authenticate,
-  cache(30),
+  cache(5),
   audit('VIEW_ACCOUNT', 'account'),
   accountController.getMyAccount
 );
