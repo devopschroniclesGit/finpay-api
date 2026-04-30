@@ -1,4 +1,5 @@
 const prisma = require('../config/database');
+const redis  = require('../config/redis');
 const { Decimal } = require('@prisma/client/runtime/library');
 
 const getAccount = async (userId) => {
@@ -34,8 +35,6 @@ const getAccountById = async (accountId) => {
   return account;
 };
 
-const redis = require('../config/redis');
-
 const topUp = async (userId, amount) => {
   const topUpAmount = new Decimal(amount);
 
@@ -52,55 +51,59 @@ const topUp = async (userId, amount) => {
   }
 
   // Get system account
-    const systemAccount = await prisma.account.findFirst({
-      where: { user: { email: 'system@finpay.dev' } },
-    });
+  const systemAccount = await prisma.account.findFirst({
+    where: { user: { email: 'system@finpay.dev' } },
+  });
 
-    if (!systemAccount) {
-      const err = new Error('System account not configured');
-      err.statusCode = 500;
-      throw err;
-    }
+  if (!systemAccount) {
+    const err = new Error('System account not configured');
+    err.statusCode = 500;
+    throw err;
+  }
 
   // Get user account
-    const userAccount = await prisma.account.findUnique({
-      where: { userId },
+  const userAccount = await prisma.account.findUnique({
+    where: { userId },
+  });
+
+  if (!userAccount) {
+    const err = new Error('Account not found');
+    err.statusCode = 404;
+    throw err;
+  }
+
+  // Atomic top-up recorded as a transaction from system to user
+  const result = await prisma.$transaction(async (tx) => {
+    // Debit system account
+    await tx.account.update({
+      where: { id: systemAccount.id },
+      data:  { balance: { decrement: topUpAmount } },
     });
 
-    if (!userAccount) {
-      const err = new Error('Account not found');
-      err.statusCode = 404;
-      throw err;
-    }
-
-  // Atomic top-up — recorded as a transaction from system to user
-    const result = await prisma.$transaction(async (tx) => {
-    // Debit system account
-      await tx.account.update({
-        where: { id: systemAccount.id },
-        data: { balance: { decrement: topUpAmount } },
-      });
-
     // Credit user account
-      const updated = await tx.account.update({
-        where: { id: userAccount.id },
-        data: { balance: { increment: topUpAmount } },
-      });
+    const updated = await tx.account.update({
+      where: { id: userAccount.id },
+      data:  { balance: { increment: topUpAmount } },
+    });
 
-    // Record as transaction
-      const txRecord = await tx.transaction.create({
-        data: {
-          idempotencyKey: `topup-${userId}-${Date.now()}`,
-          senderId:       systemAccount.id,
-          receiverId:     userAccount.id,
-          amount:         topUpAmount,
-          currency:       'ZAR',
-          status:         'COMPLETED',
-          description:    'Wallet top-up',
-        },
-      });
+    // Record as transaction so it appears in history
+    const txRecord = await tx.transaction.create({
+      data: {
+        idempotencyKey: `topup-${userId}-${Date.now()}`,
+        senderId:       systemAccount.id,
+        receiverId:     userAccount.id,
+        amount:         topUpAmount,
+        currency:       'ZAR',
+        status:         'COMPLETED',
+        description:    'Wallet top-up',
+      },
+    });
 
     // Ledger entries
+    const systemUpdated = await tx.account.findUnique({
+      where: { id: systemAccount.id },
+    });
+
     await tx.ledgerEntry.create({
       data: {
         accountId:     systemAccount.id,
@@ -108,39 +111,29 @@ const topUp = async (userId, amount) => {
         amount:        topUpAmount.negated(),
         type:          'DEBIT',
         description:   'Wallet top-up issued',
-        balanceAfter:  (await tx.account.findUnique({ where: { id: systemAccount.id } })).balance,
+        balanceAfter:  systemUpdated.balance,
       },
     });
 
-      await tx.ledgerEntry.create({
-        data: {
-          accountId:     userAccount.id,
-          transactionId: txRecord.id,
-          amount:        topUpAmount,
-          type:          'TOPUP',
-          description:   'Wallet top-up received',
-          balanceAfter:  updated.balance,
-        },
-      });
-
-      return { account: updated, transaction: txRecord };
+    await tx.ledgerEntry.create({
+      data: {
+        accountId:     userAccount.id,
+        transactionId: txRecord.id,
+        amount:        topUpAmount,
+        type:          'TOPUP',
+        description:   'Wallet top-up received',
+        balanceAfter:  updated.balance,
+      },
     });
 
-  // Bust cache
-    await redis.del(`cache:/api/v1/accounts/me:${userId}`);
-    await redis.del(`cache:/api/v1/transactions/history?page=1&limit=10:${userId}`);
-
-    return { ...result.account, balance: Number(result.account.balance) };
-};
-
-  const account = await prisma.account.update({
-    where: { userId },
-    data: { balance: { increment: topUpAmount } },
+    return { account: updated, transaction: txRecord };
   });
 
+  // Bust cache so balance updates immediately
   await redis.del(`cache:/api/v1/accounts/me:${userId}`);
+  await redis.del(`cache:/api/v1/transactions/history?page=1&limit=10:${userId}`);
 
-  return { ...account, balance: Number(account.balance) };
+  return { ...result.account, balance: Number(result.account.balance) };
 };
 
 module.exports = { getAccount, getAccountById, topUp };
