@@ -111,6 +111,8 @@ const sendMoney = async ({
       balanceAfter:  receiverUpdated.balance,
     },
   });
+  return txRecord;
+});
   // If ANY step throws:
   //   - The debit is rolled back
   //   - The credit is rolled back
