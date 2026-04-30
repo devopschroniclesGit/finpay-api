@@ -82,6 +82,35 @@ const sendMoney = async ({
   //
   // prisma.$transaction() wraps all three operations in a single DB transaction.
   //
+// After txRecord is created, add these lines:
+
+// Get receiver's updated balance
+  const receiverUpdated = await tx.account.findUnique({
+    where: { id: receiverUser.account.id },
+  });
+
+// Write immutable ledger entries
+  await tx.ledgerEntry.create({
+    data: {
+      accountId:     senderAccount.id,
+      transactionId: txRecord.id,
+      amount:        transferAmount.negated(),
+      type:          'DEBIT',
+      description:   description || 'Transfer sent',
+      balanceAfter:  updatedSender.balance,
+    },
+  });
+
+  await tx.ledgerEntry.create({
+    data: {
+      accountId:     receiverUser.account.id,
+      transactionId: txRecord.id,
+      amount:        transferAmount,
+      type:          'CREDIT',
+      description:   description || 'Transfer received',
+      balanceAfter:  receiverUpdated.balance,
+    },
+  });
   // If ANY step throws:
   //   - The debit is rolled back
   //   - The credit is rolled back

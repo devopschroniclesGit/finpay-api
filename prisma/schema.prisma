@@ -35,7 +35,7 @@ model Account {
   user       User          @relation(fields: [userId], references: [id])
   sentTx     Transaction[] @relation("sender")
   receivedTx Transaction[] @relation("receiver")
-
+  ledgerEntries LedgerEntry[]
   @@map("accounts")
 }
 
@@ -54,7 +54,7 @@ model Transaction {
 
   sender   Account @relation("sender",   fields: [senderId],   references: [id])
   receiver Account @relation("receiver", fields: [receiverId], references: [id])
-
+  ledgerEntries LedgerEntry[]
   @@map("transactions")
 }
 
@@ -74,7 +74,27 @@ model AuditLog {
 
   @@map("audit_logs")
 }
+model LedgerEntry {
+  id            String          @id @default(uuid())
+  accountId     String
+  transactionId String
+  amount        Decimal         @db.Decimal(18, 2)
+  type          LedgerEntryType
+  description   String?
+  balanceAfter  Decimal         @db.Decimal(18, 2)
+  createdAt     DateTime        @default(now())
 
+  account     Account     @relation(fields: [accountId], references: [id])
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+
+  @@map("ledger_entries")
+}
+
+enum LedgerEntryType {
+  DEBIT
+  CREDIT
+  TOPUP
+}
 enum TransactionStatus {
   PENDING
   COMPLETED

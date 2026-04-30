@@ -13,7 +13,7 @@
     "db:seed": "node prisma/seed.js"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.cjs"
   },
   "keywords": [
     "fintech",

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/database');
+const redis = require('../config/redis');
 const { error } = require('../utils/response');
 
 const authenticate = async (req, res, next) => {
@@ -16,6 +17,11 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
+    const blacklisted = await redis.get(`blacklist:${token}`);
+    if (blacklisted) {
+	    return error(res, 'Session has been revoked. Please login again.', 401);
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await prisma.user.findUnique({
