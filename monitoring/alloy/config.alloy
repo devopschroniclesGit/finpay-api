@@ -15,7 +15,7 @@ prometheus.remote_write "grafana_cloud" {
 
     basic_auth {
       username = "3163626"
-      password: env("GRAFANA_TOKEN")}
+      password = env("GRAFANA_TOKEN")}
   }
 
   external_labels = {
