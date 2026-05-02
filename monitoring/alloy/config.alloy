@@ -1,0 +1,26 @@
+// Scrape finpay-api metrics
+prometheus.scrape "finpay_api" {
+  targets = [
+    { __address__ = "localhost:3000" },
+  ]
+  metrics_path    = "/metrics"
+  scrape_interval = "15s"
+  forward_to      = [prometheus.remote_write.grafana_cloud.receiver]
+}
+
+// Push to Grafana Cloud
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = "https://prometheus-prod-66-prod-us-east-3.grafana.net/api/prom/push"
+
+    basic_auth {
+      username = "3163626"
+      password: env("GRAFANA_TOKEN")}
+  }
+
+  external_labels = {
+    job         = "finpay-api",
+    instance    = "local",
+    environment = "development",
+  }
+}
