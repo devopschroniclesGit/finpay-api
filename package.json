@@ -23,7 +23,7 @@
     "express",
     "prisma"
   ],
-  "author": "Your Name",
+  "author": "Lorenzo",
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
