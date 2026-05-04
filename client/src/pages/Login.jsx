@@ -249,7 +249,14 @@ export default function Login({ onLogin, onRegister }) {
   return (
     <div style={s.page}>
       <div style={s.card} className="fade-up">
-        <div style={s.logo}>FinPay</div>
+        <div style={{ marginBottom: '16px' }}>
+	  <img
+	   src="/logo.png"
+	   alt="FinPay"
+	   style={{ height: '60px', width: 'auto' }}
+	  />
+	</div>
+
         <div style={s.tagline}>Secure digital payments platform</div>
 
         <div style={s.trustBadge}>
