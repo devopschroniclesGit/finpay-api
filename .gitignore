@@ -21,3 +21,4 @@ node_modules/.prisma/
 
 /src/generated/prisma
 monitoring/alloy/.env
+data-alloy/
