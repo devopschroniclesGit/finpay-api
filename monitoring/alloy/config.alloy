@@ -1,9 +1,10 @@
 // Scrape finpay-api metrics
 prometheus.scrape "finpay_api" {
   targets = [
-    { __address__ = "localhost:3000" },
+    { __address__ = "finpay-api-production.up.railway.app" },
   ]
   metrics_path    = "/metrics"
+  scheme          = "https"
   scrape_interval = "15s"
   forward_to      = [prometheus.remote_write.grafana_cloud.receiver]
 }
@@ -15,7 +16,8 @@ prometheus.remote_write "grafana_cloud" {
 
     basic_auth {
       username = "3163626"
-      password = env("GRAFANA_TOKEN")}
+      password = env("GRAFANA_TOKEN")
+    }
   }
 
   external_labels = {
