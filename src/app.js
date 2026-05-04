@@ -15,6 +15,17 @@ const app = express();
 // Trust Railway's proxy — required for rate limiting and IP detection
 app.set('trust proxy', 1);
 
+const { register } = require('./config/metrics');
+const metricsMiddleware = require('./middleware/metricsMiddleware');
+
+// Add near the top with other middleware
+app.use(metricsMiddleware);
+
+// Metrics endpoint — Prometheus scrapes this
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
 // ── Security ──────────────────────────────────────────────────────────────────
 
 app.use(helmet());

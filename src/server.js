@@ -1,3 +1,5 @@
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 require('dotenv').config();
 const app = require('./app');
 const logger = require('./config/logger');
