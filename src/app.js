@@ -31,7 +31,7 @@ app.get('/metrics', async (req, res) => {
 app.use(helmet());
 
 app.use(cors({
-  origin: ['https://devopschroniclesgit.github.io','http://192.168.56.11:5173', 'http://localhost:5173'],
+	origin: ['https://devopschroniclesgit.github.io','https://devopschronicles.com','https://www.devopschronicles.com','http://192.168.56.11:5173', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
 }));
