@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -12,37 +13,55 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 const logger = require('./config/logger');
 
 const app = express();
-// Trust Railway's proxy — required for rate limiting and IP detection
+
+// Trust Railway proxy (required for rate limiting & IP detection)
 app.set('trust proxy', 1);
 
 const { register } = require('./config/metrics');
 const metricsMiddleware = require('./middleware/metricsMiddleware');
 
-// Add near the top with other middleware
+// ─────────────────────────────────────────────────────────────────────────────
+// Metrics middleware
+// ─────────────────────────────────────────────────────────────────────────────
+
 app.use(metricsMiddleware);
 
-// Metrics endpoint — Prometheus scrapes this
+// Prometheus metrics endpoint
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
   res.end(await register.metrics());
 });
-// ── Security ──────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Security
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use(helmet());
 
 app.use(cors({
-	origin: ['https://devopschroniclesgit.github.io','https://devopschronicles.com','https://www.devopschronicles.com','https://finpay.devopschronicles.com','http://192.168.56.11:5173', 'http://localhost:5173'],
+  origin: [
+    'https://devopschroniclesgit.github.io',
+    'https://devopschronicles.com',
+    'https://www.devopschronicles.com',
+    'https://finpay.devopschronicles.com',
+    'http://192.168.56.11:5173',
+    'http://localhost:5173',
+  ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
 }));
 
-// ── Request parsing ───────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Request parsing
+// ─────────────────────────────────────────────────────────────────────────────
 
-// Limit body size — prevents large payload attacks
+// Prevent large payload attacks
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// ── HTTP request logging ──────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// HTTP logging
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use(morgan('combined', {
   stream: {
@@ -50,54 +69,112 @@ app.use(morgan('combined', {
   },
 }));
 
-// ── Rate limiting ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Rate limiting
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use('/api/', apiLimiter);
 
-// ── API routes ────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// API routes
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use('/api/v1', routes);
 
-// ── Swagger documentation ─────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Swagger Documentation
+// ─────────────────────────────────────────────────────────────────────────────
 
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
+
     info: {
       title: 'FinPay API',
       version: '1.0.0',
-      description: [
-        'Production-style fintech payment API.',
-        'Inspired by the backend architecture of Stripe, PayFast, and Yoco.',
-        '',
-        '**Features:** JWT auth · wallet accounts · atomic transfers · ',
-        'idempotency keys · Redis rate limiting · response caching · audit logs',
-      ].join('\n'),
+      description: `
+Production-style fintech payment API.
+
+Inspired by the backend architecture of Stripe, PayFast, and Yoco.
+
+## Features
+- JWT Authentication
+- Wallet Accounts
+- Atomic Transfers
+- Idempotency Keys
+- Redis Rate Limiting
+- Response Caching
+- Audit Logs
+- Prometheus Metrics
+- Swagger API Documentation
+
+## Demo Account
+
+Email: alice@finpay.dev  
+Password: SecurePass123
+
+## Authentication Flow
+
+1. Use \`POST /api/v1/auth/login\`
+2. Copy the returned JWT token
+3. Click the **Authorize** button
+4. Paste:
+
+\`\`\`
+Bearer YOUR_TOKEN
+\`\`\`
+
+5. You can now access protected endpoints.
+      `,
       contact: {
         name: 'FinPay API',
       },
     },
+
     servers: [
       {
-	url: 'https://finpay-api-production.up.railway.app',
-	description: 'Production',
+        url: 'https://finpay-api-production.up.railway.app',
+        description: 'Production',
       },
       {
         url: 'http://localhost:3000',
-        description: 'Local development',
+        description: 'Local Development',
       },
     ],
+
+    tags: [
+      {
+        name: 'Auth',
+        description: 'Authentication endpoints',
+      },
+      {
+        name: 'Transactions',
+        description: 'Money transfers and transaction history',
+      },
+      {
+        name: 'System',
+        description: 'System monitoring and health endpoints',
+      },
+    ],
+
     components: {
       securitySchemes: {
         BearerAuth: {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-          description: 'Paste your JWT token from /auth/login here',
+          description: 'Paste your JWT token here',
         },
       },
     },
+
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   },
+
   apis: ['./src/routes/*.js'],
 };
 
@@ -108,13 +185,33 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     customSiteTitle: 'FinPay API Docs',
+
     swaggerOptions: {
-      persistAuthorization: true, // keeps token across page refreshes
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: 'list',
+      filter: true,
     },
+
+    customCss: `
+      .swagger-ui .topbar {
+        display: none;
+      }
+
+      .swagger-ui .info {
+        margin-bottom: 20px;
+      }
+
+      .swagger-ui .scheme-container {
+        border-radius: 8px;
+      }
+    `,
   })
 );
 
-// ── 404 handler ───────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 404 Handler
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use((req, res) => {
   res.status(404).json({
@@ -124,8 +221,10 @@ app.use((req, res) => {
   });
 });
 
-// ── Global error handler ──────────────────────────────────────────────────────
-// Must be last — Express identifies error handlers by their 4-argument signature
+// ─────────────────────────────────────────────────────────────────────────────
+// Global Error Handler
+// Must be LAST middleware
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use(errorHandler);
 
