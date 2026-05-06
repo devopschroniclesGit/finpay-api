@@ -79,6 +79,10 @@ const swaggerOptions = {
     },
     servers: [
       {
+	url: 'https://finpay-api-production.up.railway.app',
+	description: 'Production',
+      },
+      {
         url: 'http://localhost:3000',
         description: 'Local development',
       },
