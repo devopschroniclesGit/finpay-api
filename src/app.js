@@ -133,7 +133,7 @@ Bearer YOUR_TOKEN
 
     servers: [
       {
-        url: 'http://finpay-production.eba-n2emmkzf.eu-north-1.elasticbeanstalk.com',
+        url: 'https://finpay-api-production.up.railway.app',
         description: 'Production',
       },
       {
