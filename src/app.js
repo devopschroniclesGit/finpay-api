@@ -133,9 +133,13 @@ Bearer YOUR_TOKEN
 
     servers: [
       {
-        url: 'https://finpay-api-production.up.railway.app',
+        url: 'http://finpay-production.eba-n2emmkzf.eu-north-1.elasticbeanstalk.com',
         description: 'Production',
       },
+     /* {
+        url: 'https://finpay-api-production.up.railway.app',
+        description: 'Production',
+     */ },
       {
         url: 'http://localhost:3000',
         description: 'Local Development',
@@ -208,6 +212,20 @@ app.use(
     `,
   })
 );
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Server React frontend (production only)
+// ─────────────────────────────────────────────────────────────────────────────
+
+cont path = reqiure('path');
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(expess.static(path.join(__dirname,'..','client','dist')));
+  app.get('*',(req,res) =>{
+    res.sendFile(path.join(__dirname,'..','client','dist','index.html'));
+  });
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 404 Handler
