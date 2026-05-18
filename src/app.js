@@ -223,11 +223,11 @@ if (process.env.NODE_ENV === 'production') {
   if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get('/*',(req, res) => {
-      res.sendFile(path.join(__dirname, 'index.html'));
-  });
-} else {
-  console.warn('WARNING: client/dist not found - react frontend not served');
-}
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else {
+    console.warn('WARNING: client/dist not found - react frontend not served');
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
