@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+     */ },
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
@@ -136,10 +137,6 @@ Bearer YOUR_TOKEN
         url: 'http://finpay-production.eba-n2emmkzf.eu-north-1.elasticbeanstalk.com',
         description: 'Production',
       },
-     /* {
-        url: 'https://finpay-api-production.up.railway.app',
-        description: 'Production',
-     */ },
       {
         url: 'http://localhost:3000',
         description: 'Local Development',
@@ -218,10 +215,10 @@ app.use(
 // Server React frontend (production only)
 // ─────────────────────────────────────────────────────────────────────────────
 
-cont path = reqiure('path');
+const path = reqiure('path');
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(expess.static(path.join(__dirname,'..','client','dist')));
+  app.use(express.static(path.join(__dirname,'..','client','dist')));
   app.get('*',(req,res) =>{
     res.sendFile(path.join(__dirname,'..','client','dist','index.html'));
   });
