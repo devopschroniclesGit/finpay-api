@@ -133,8 +133,8 @@ Bearer YOUR_TOKEN
 
     servers: [
       {
-        url: 'https://finpay-api-production.up.railway.app',
-        description: 'Production',
+        url: 'http://finpay-production.eba-n2emmkzf.eu-north-1.elasticbeanstalk.com',
+        description: 'Production AWS',
       },
       {
         url: 'http://localhost:3000',
@@ -209,6 +209,26 @@ app.use(
   })
 );
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Server React frontend (production only)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const path = require('path');
+const fs = require('fs');
+
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '..', 'client', 'dist');
+
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    app.get('/*',(req, res) => {
+      res.sendFile(path.join(__dirname, 'index.html'));
+  });
+} else {
+  console.warn('WARNING: client/dist not found - react frontend not served');
+}
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 404 Handler
