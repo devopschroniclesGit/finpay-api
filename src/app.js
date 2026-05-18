@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-     */ },
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
@@ -215,7 +214,7 @@ app.use(
 // Server React frontend (production only)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const path = reqiure('path');
+const path = require('path');
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname,'..','client','dist')));
