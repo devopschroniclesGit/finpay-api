@@ -36,7 +36,9 @@ app.get('/metrics', async (req, res) => {
 // Security
 // ─────────────────────────────────────────────────────────────────────────────
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 
 app.use(cors({
   origin: [
@@ -209,6 +211,17 @@ app.use(
   })
 );
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 404 Handler
+// ─────────────────────────────────────────────────────────────────────────────
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.originalUrl} not found`,
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Server React frontend (production only)
@@ -229,18 +242,6 @@ if (process.env.NODE_ENV === 'production') {
     console.warn('WARNING: client/dist not found - react frontend not served');
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 404 Handler
-// ─────────────────────────────────────────────────────────────────────────────
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.method} ${req.originalUrl} not found`,
-    timestamp: new Date().toISOString(),
-  });
-});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Global Error Handler
