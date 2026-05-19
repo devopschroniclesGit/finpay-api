@@ -215,43 +215,19 @@ app.use(
 // Server React frontend (production only)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const path = require('path');
-const fs = require('fs');
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '..', 'client', 'dist');
 
-const distPath = path.join(__dirname, '..', 'client', 'dist');
+  if (fs.existsSync(distPath)) {
+    // Serve static assets
+    app.use(express.static(distPath));
 
-// Debug — remove after fix
-console.log('=== DEBUG ===');
-console.log('__dirname:', __dirname);
-console.log('distPath:', distPath);
-console.log('distPath exists:', fs.existsSync(distPath));
-try {
-  console.log('/app contents:', fs.readdirSync('/app'));
-  console.log('/app/client exists:', fs.existsSync('/app/client'));
-  if (fs.existsSync('/app/client')) {
-    console.log('/app/client contents:', fs.readdirSync('/app/client'));
+    // For ALL remaining routes serve index.html
+    app.use((req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
   }
-} catch(e) {
-  console.log('readdir error:', e.message);
 }
-console.log('=== END DEBUG ===');
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 404 Handler
-// ─────────────────────────────────────────────────────────────────────────────
-
-//app.use((req, res) => {
-//  res.status(404).json({
-//    success: false,
-//    message: `Route ${req.method} ${req.originalUrl} not found`,
-//    timestamp: new Date().toISOString(),
-//  });
-//});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Global Error Handler
-// Must be LAST middleware
-// ─────────────────────────────────────────────────────────────────────────────
 
 app.use(errorHandler);
 
