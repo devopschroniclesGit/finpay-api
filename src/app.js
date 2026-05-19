@@ -212,18 +212,6 @@ app.use(
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 404 Handler
-// ─────────────────────────────────────────────────────────────────────────────
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.method} ${req.originalUrl} not found`,
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Server React frontend (production only)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -247,6 +235,18 @@ try {
   console.log('readdir error:', e.message);
 }
 console.log('=== END DEBUG ===');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 404 Handler
+// ─────────────────────────────────────────────────────────────────────────────
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.originalUrl} not found`,
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Global Error Handler
