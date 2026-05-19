@@ -47,11 +47,12 @@ WORKDIR /app
 # Copy API dependencies from stage 2
 COPY --from=dependencies /app/node_modules ./node_modules
 
+# Copy API source code
+COPY --chown=finpay:nodejs . .
+
 # Copy built React app from stage 1
 COPY --from=client-builder /app/client/dist ./client/dist
 
-# Copy API source code
-COPY --chown=finpay:nodejs . .
 
 # Create logs directory
 RUN mkdir -p logs && chown finpay:nodejs logs

@@ -230,16 +230,19 @@ app.use((req, res) => {
 const path = require('path');
 const fs = require('fs');
 
-if (process.env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, '..', 'client', 'dist');
+const distPath = path.join(__dirname, '..', 'client', 'dist');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('distPath:', distPath);
+console.log('distPath exists:', fs.existsSync(distPath));
 
+if (process.env.NODE_ENV === 'production') {
   if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   } else {
-    console.warn('WARNING: client/dist not found - react frontend not served');
+    console.warn('WARNING: client/dist not found - React frontend not served');
   }
 }
 
