@@ -228,7 +228,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use((req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
-    else {
+  } else {
     console.warn('WARNING: client/dist not found - React frontend not served');
   }
 }
