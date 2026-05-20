@@ -7,6 +7,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "build:client": "cd client && npm install && npm run build",
+    "lint": "eslint src/**/*.js",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate",
     "db:studio": "npx prisma studio",
@@ -52,7 +53,9 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^10.4.0",
     "nodemon": "^3.1.14"
   }
 }
