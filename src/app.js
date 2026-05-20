@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
@@ -226,6 +228,8 @@ if (process.env.NODE_ENV === 'production') {
     app.use((req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
+    else {
+    console.warn('WARNING: client/dist not found - React frontend not served');
   }
 }
 
