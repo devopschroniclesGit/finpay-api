@@ -107,7 +107,9 @@ const redis = {
 const disconnectRedis = async () => {
   try {
     await redis.quit();
-  } catch (_) {}
+  } catch (_) {
+	// Redis connection error handled by Upstash REST client
+  }
   logger.info('Redis disconnected');
 };
 

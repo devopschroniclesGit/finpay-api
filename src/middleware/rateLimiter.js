@@ -75,13 +75,17 @@ class RedisRateLimitStore {
         parsed.hits = Math.max(0, parsed.hits - 1);
         await redis.set(storeKey, JSON.stringify(parsed));
       }
-    } catch {}
+    } catch {
+	// Rate limit store error — fail open
+    }
   }
 
   async resetKey(key) {
     try {
       await redis.del(this._key(key));
-    } catch {}
+    } catch {
+	// Rate limit store error — fail open
+    }
   }
 }
 

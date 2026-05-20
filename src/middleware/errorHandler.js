@@ -1,6 +1,6 @@
 const logger = require('../config/logger');
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res) => {
   // Always log the full error internally
   logger.error('Unhandled error', {
     message: err.message,
