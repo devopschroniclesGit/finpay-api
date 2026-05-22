@@ -45,13 +45,13 @@ RUN addgroup --system --gid 1001 nodejs && \
 WORKDIR /app
 
 # Copy API dependencies from stage 2
-COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 
 # Copy API source code
 COPY --chown=finpay:nodejs . .
 
 # Copy built React app from stage 1
-COPY --from=client-builder /app/client/dist ./client/dist
+COPY --from=deps /app/client/dist ./client/dist
 
 
 # Create logs directory
