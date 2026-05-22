@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ── Stage 1: Build React client ───────────────────────────────────────────────
-FROM node:20-slim AS client-builder
+FROM public.ecr.aws/docker/library/node:20-slim AS deps
 
 WORKDIR /app/client
 
@@ -14,7 +14,7 @@ COPY client/ ./
 RUN npm run build
 
 # ── Stage 2: Install API production dependencies ───────────────────────────────
-FROM node:20-slim AS dependencies
+FROM public.ecr.aws/docker/library/node:20-slim AS builder
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ RUN npm ci --only=production && \
     npx prisma generate
 
 # ── Stage 3: Production runner ─────────────────────────────────────────────────
-FROM node:20-slim AS runner
+FROM public.ecr.aws/docker/library/node:20-slim AS runner
 
 # Install OpenSSL in final image too
 RUN apt-get update -y && \
