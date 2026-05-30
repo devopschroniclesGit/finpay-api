@@ -233,6 +233,14 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
+// 404 catch-all — must be after all routes, before errorHandler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.originalUrl} not found`,
+  });
+});
+
 app.use(errorHandler);
 
 module.exports = app;
