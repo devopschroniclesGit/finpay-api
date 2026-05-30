@@ -183,3 +183,4 @@ Step-by-step setup covering Phases 1-3 (scaffolding, dependencies, Docker, and d
 - Deployment to Railway or Render
 - Health check integration in CI (ping `/api/v1/health` post-deploy)
 - Webhook events for transaction status changes
+# EKS deployment enabled
