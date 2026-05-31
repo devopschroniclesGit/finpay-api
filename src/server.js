@@ -5,10 +5,49 @@ const app = require('./app');
 const logger = require('./config/logger');
 const { disconnectDatabase } = require('./config/database');
 const { disconnectRedis } = require('./config/redis');
+const { execSync } = require('child_process');
 
 const PORT = parseInt(process.env.PORT) || 3000;
 
+// ── Run database migrations on startup ───────────────────────────────────────
+//
+// Runs `prisma migrate deploy` before the server starts accepting requests.
+// This ensures the schema is always up to date after a fresh deployment.
+//
+// Why here and not in the pipeline?
+// - The pipeline runs in CodeBuild which cannot reach the private RDS subnet
+// - Running migrations at startup guarantees they run in the same network
+//   context as the app (inside EB, which has access to RDS)
+// - `migrate deploy` is idempotent — safe to run on every startup
+//   (only applies pending migrations, skips already-applied ones)
+//
+// If migrations fail, the server exits — better to fail fast than to start
+// with a mismatched schema and get cryptic runtime errors.
+
+const runMigrations = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    logger.info('Skipping migrations in non-production environment');
+    return;
+  }
+
+  try {
+    logger.info('[startup] Running database migrations...');
+    execSync('npx prisma migrate deploy', {
+      stdio: 'inherit',
+      env: process.env,
+    });
+    logger.info('[startup] Database migrations complete');
+  } catch (err) {
+    logger.error('[startup] Database migration failed — exiting', {
+      error: err.message,
+    });
+    process.exit(1);
+  }
+};
+
 // ── Start server ──────────────────────────────────────────────────────────────
+
+runMigrations();
 
 const server = app.listen(PORT, () => {
   logger.info(`🚀 FinPay API started`, {

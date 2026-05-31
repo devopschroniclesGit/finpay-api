@@ -1,246 +1,1230 @@
-name: CI
+    permissions:
+      id-token: write
+      contents: read
 
+name: CI
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
 on:
+    permissions:
+      id-token: write
+      contents: read
+
   push:
+    permissions:
+      id-token: write
+      contents: read
+
     branches:
+    permissions:
+      id-token: write
+      contents: read
+
       - main
+    permissions:
+      id-token: write
+      contents: read
+
     paths-ignore:
+    permissions:
+      id-token: write
+      contents: read
+
       - '**/*.md'
+    permissions:
+      id-token: write
+      contents: read
+
       - 'docs/**'
+    permissions:
+      id-token: write
+      contents: read
+
   pull_request:
+    permissions:
+      id-token: write
+      contents: read
+
     branches: [main]
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
 jobs:
+    permissions:
+      id-token: write
+      contents: read
+
   test:
+    permissions:
+      id-token: write
+      contents: read
+
     name: Test & Build
+    permissions:
+      id-token: write
+      contents: read
+
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
     services:
+    permissions:
+      id-token: write
+      contents: read
+
       # PostgreSQL service container — available at localhost:5432
+    permissions:
+      id-token: write
+      contents: read
+
       postgres:
+    permissions:
+      id-token: write
+      contents: read
+
         image: postgres:15-alpine
+    permissions:
+      id-token: write
+      contents: read
+
         env:
+    permissions:
+      id-token: write
+      contents: read
+
           POSTGRES_DB: finpay_db
+    permissions:
+      id-token: write
+      contents: read
+
           POSTGRES_USER: finpay_user
+    permissions:
+      id-token: write
+      contents: read
+
           POSTGRES_PASSWORD: finpay_password
+    permissions:
+      id-token: write
+      contents: read
+
         ports:
+    permissions:
+      id-token: write
+      contents: read
+
           - 5432:5432
+    permissions:
+      id-token: write
+      contents: read
+
         options: >-
+    permissions:
+      id-token: write
+      contents: read
+
           --health-cmd pg_isready
+    permissions:
+      id-token: write
+      contents: read
+
           --health-interval 10s
+    permissions:
+      id-token: write
+      contents: read
+
           --health-timeout 5s
+    permissions:
+      id-token: write
+      contents: read
+
           --health-retries 5
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # Redis service container — available at localhost:6379
+    permissions:
+      id-token: write
+      contents: read
+
       redis:
+    permissions:
+      id-token: write
+      contents: read
+
         image: redis:7-alpine
+    permissions:
+      id-token: write
+      contents: read
+
         ports:
+    permissions:
+      id-token: write
+      contents: read
+
           - 6379:6379
+    permissions:
+      id-token: write
+      contents: read
+
         options: >-
+    permissions:
+      id-token: write
+      contents: read
+
           --health-cmd "redis-cli ping"
+    permissions:
+      id-token: write
+      contents: read
+
           --health-interval 10s
+    permissions:
+      id-token: write
+      contents: read
+
           --health-timeout 5s
+    permissions:
+      id-token: write
+      contents: read
+
           --health-retries 5
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
     env:
+    permissions:
+      id-token: write
+      contents: read
+
       NODE_ENV: test
+    permissions:
+      id-token: write
+      contents: read
+
       PORT: 3000
+    permissions:
+      id-token: write
+      contents: read
+
       DATABASE_URL: postgresql://finpay_user:finpay_password@localhost:5432/finpay_db
+    permissions:
+      id-token: write
+      contents: read
+
       REDIS_URL: redis://localhost:6379
+    permissions:
+      id-token: write
+      contents: read
+
       JWT_SECRET: ci-test-secret-not-used-in-production
+    permissions:
+      id-token: write
+      contents: read
+
       JWT_EXPIRES_IN: 7d
+    permissions:
+      id-token: write
+      contents: read
+
       RATE_LIMIT_WINDOW_MS: 900000
+    permissions:
+      id-token: write
+      contents: read
+
       RATE_LIMIT_MAX_REQUESTS: 1000
+    permissions:
+      id-token: write
+      contents: read
+
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
+    permissions:
+      id-token: write
+      contents: read
+
       # ── Checkout ─────────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Checkout code
+    permissions:
+      id-token: write
+      contents: read
+
         uses: actions/checkout@v4
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Node.js setup ────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Set up Node.js
+    permissions:
+      id-token: write
+      contents: read
+
         uses: actions/setup-node@v4
+    permissions:
+      id-token: write
+      contents: read
+
         with:
+    permissions:
+      id-token: write
+      contents: read
+
           node-version: '20'
+    permissions:
+      id-token: write
+      contents: read
+
           cache: 'npm'
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Install dependencies ──────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Install dependencies
+    permissions:
+      id-token: write
+      contents: read
+
         run: npm ci
+    permissions:
+      id-token: write
+      contents: read
+
         env:
+    permissions:
+      id-token: write
+      contents: read
+
           PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
+    permissions:
+      id-token: write
+      contents: read
+
           npm_config_prefer_offline: true
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Lint
+    permissions:
+      id-token: write
+      contents: read
+
         run: npm run lint
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Generate Prisma client
+    permissions:
+      id-token: write
+      contents: read
+
         run: npx prisma generate
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Database setup ────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Run database migrations
+    permissions:
+      id-token: write
+      contents: read
+
         run: npx prisma migrate deploy
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Generate Prisma client
+    permissions:
+      id-token: write
+      contents: read
+
         run: npx prisma generate
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Seed database
-        run: npx prisma db seed || echo "Seed had warnings — continuing"
+    permissions:
+      id-token: write
+      contents: read
 
+        run: npx prisma db seed || echo "Seed had warnings — continuing"
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Start server ──────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Start server
+    permissions:
+      id-token: write
+      contents: read
+
         run: node src/server.js &
+    permissions:
+      id-token: write
+      contents: read
+
         # & runs it in the background — CI continues while server starts
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Wait for server to be ready
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           echo "Waiting for server to start..."
+    permissions:
+      id-token: write
+      contents: read
+
           for i in $(seq 1 15); do
+    permissions:
+      id-token: write
+      contents: read
+
             if curl -sf http://localhost:3000/api/v1/health > /dev/null; then
+    permissions:
+      id-token: write
+      contents: read
+
               echo "✅ Server is ready"
+    permissions:
+      id-token: write
+      contents: read
+
               break
+    permissions:
+      id-token: write
+      contents: read
+
             fi
+    permissions:
+      id-token: write
+      contents: read
+
             echo "Attempt $i/15 — waiting 2s..."
+    permissions:
+      id-token: write
+      contents: read
+
             sleep 2
+    permissions:
+      id-token: write
+      contents: read
+
           done
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Health check ──────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Health check
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           RESPONSE=$(curl -sf http://localhost:3000/api/v1/health)
+    permissions:
+      id-token: write
+      contents: read
+
           echo "Health response: $RESPONSE"
+    permissions:
+      id-token: write
+      contents: read
+
           echo $RESPONSE | python3 -c "
+    permissions:
+      id-token: write
+      contents: read
+
           import sys, json
+    permissions:
+      id-token: write
+      contents: read
+
           data = json.load(sys.stdin)
+    permissions:
+      id-token: write
+      contents: read
+
           assert data['success'] == True, 'success must be true'
+    permissions:
+      id-token: write
+      contents: read
+
           assert data['status'] == 'healthy', 'status must be healthy'
+    permissions:
+      id-token: write
+      contents: read
+
           print('✅ Health check passed')
+    permissions:
+      id-token: write
+      contents: read
+
           "
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Smoke tests ───────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Smoke test — register endpoint
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           RESPONSE=$(curl -sf -X POST http://localhost:3000/api/v1/auth/register \
+    permissions:
+      id-token: write
+      contents: read
+
             -H "Content-Type: application/json" \
+    permissions:
+      id-token: write
+      contents: read
+
             -d '{"email":"ci-test@finpay.dev","password":"SecurePass123","firstName":"CI","lastName":"Test"}')
+    permissions:
+      id-token: write
+      contents: read
+
           echo "Register response: $RESPONSE"
+    permissions:
+      id-token: write
+      contents: read
+
           echo $RESPONSE | python3 -c "
+    permissions:
+      id-token: write
+      contents: read
+
           import sys, json
+    permissions:
+      id-token: write
+      contents: read
+
           data = json.load(sys.stdin)
+    permissions:
+      id-token: write
+      contents: read
+
           assert data['success'] == True, 'register must succeed'
+    permissions:
+      id-token: write
+      contents: read
+
           assert 'token' in data['data'], 'token must be present'
+    permissions:
+      id-token: write
+      contents: read
+
           print('✅ Register smoke test passed')
+    permissions:
+      id-token: write
+      contents: read
+
           "
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Smoke test — login endpoint
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           RESPONSE=$(curl -sf -X POST http://localhost:3000/api/v1/auth/login \
+    permissions:
+      id-token: write
+      contents: read
+
             -H "Content-Type: application/json" \
+    permissions:
+      id-token: write
+      contents: read
+
             -d '{"email":"ci-test@finpay.dev","password":"SecurePass123"}')
+    permissions:
+      id-token: write
+      contents: read
+
           echo "Login response: $RESPONSE"
+    permissions:
+      id-token: write
+      contents: read
+
           echo $RESPONSE | python3 -c "
+    permissions:
+      id-token: write
+      contents: read
+
           import sys, json
+    permissions:
+      id-token: write
+      contents: read
+
           data = json.load(sys.stdin)
+    permissions:
+      id-token: write
+      contents: read
+
           assert data['success'] == True, 'login must succeed'
+    permissions:
+      id-token: write
+      contents: read
+
           assert 'token' in data['data'], 'token must be present'
+    permissions:
+      id-token: write
+      contents: read
+
           print('✅ Login smoke test passed')
+    permissions:
+      id-token: write
+      contents: read
+
           "
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Smoke test — protected endpoint requires auth
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+    permissions:
+      id-token: write
+      contents: read
+
             http://localhost:3000/api/v1/accounts/me)
+    permissions:
+      id-token: write
+      contents: read
+
           echo "Protected endpoint status: $RESPONSE"
+    permissions:
+      id-token: write
+      contents: read
+
           [ "$RESPONSE" = "401" ] && echo "✅ Auth protection working" || \
+    permissions:
+      id-token: write
+      contents: read
+
             (echo "❌ Expected 401 got $RESPONSE" && exit 1)
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Smoke test — 404 for unknown routes
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+    permissions:
+      id-token: write
+      contents: read
+
             http://localhost:3000/api/v1/does-not-exist)
+    permissions:
+      id-token: write
+      contents: read
+
           echo "404 status: $RESPONSE"
+    permissions:
+      id-token: write
+      contents: read
+
           [ "$RESPONSE" = "404" ] && echo "✅ 404 handler working" || \
+    permissions:
+      id-token: write
+      contents: read
+
             (echo "❌ Expected 404 got $RESPONSE" && exit 1)
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       # ── Docker build ──────────────────────────────────────────────────────────
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Build Docker image
+    permissions:
+      id-token: write
+      contents: read
+
         run: docker build -t finpay-api:${{ github.sha }} .
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Confirm Docker image built
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           docker images finpay-api
+    permissions:
+      id-token: write
+      contents: read
+
           echo "✅ Docker image built successfully"
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
   push:
+    permissions:
+      id-token: write
+      contents: read
+
     name: Push to ECR
+    permissions:
+      id-token: write
+      contents: read
+
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     needs: test
+    permissions:
+      id-token: write
+      contents: read
+
     if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+      contents: read
+
     outputs:
+    permissions:
+      id-token: write
+      contents: read
+
       image-tag: ${{ steps.meta.outputs.tag }}
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Checkout
+    permissions:
+      id-token: write
+      contents: read
+
         uses: actions/checkout@v4
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Configure AWS credentials
+    permissions:
+      id-token: write
+      contents: read
+
         uses: aws-actions/configure-aws-credentials@v4
+    permissions:
+      id-token: write
+      contents: read
+
         with:
+    permissions:
+      id-token: write
+      contents: read
+
           role-to-assume: arn:aws:iam::623155450632:role/finpay-github-actions
+    permissions:
+      id-token: write
+      contents: read
+
           aws-region: us-east-1
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Login to Amazon ECR
+    permissions:
+      id-token: write
+      contents: read
+
         uses: aws-actions/amazon-ecr-login@v2
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Generate image tag
+    permissions:
+      id-token: write
+      contents: read
+
         id: meta
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+    permissions:
+      id-token: write
+      contents: read
+
           echo "tag=sha-${SHORT_SHA}" >> $GITHUB_OUTPUT
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Push to ECR
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           docker tag finpay-api:${{ github.sha }} \
+    permissions:
+      id-token: write
+      contents: read
+
             623155450632.dkr.ecr.us-east-1.amazonaws.com/finpay-api:${{ steps.meta.outputs.tag }}
+    permissions:
+      id-token: write
+      contents: read
+
           docker tag finpay-api:${{ github.sha }} \
+    permissions:
+      id-token: write
+      contents: read
+
             623155450632.dkr.ecr.us-east-1.amazonaws.com/finpay-api:latest
+    permissions:
+      id-token: write
+      contents: read
+
           docker push 623155450632.dkr.ecr.us-east-1.amazonaws.com/finpay-api:${{ steps.meta.outputs.tag }}
+    permissions:
+      id-token: write
+      contents: read
+
           docker push 623155450632.dkr.ecr.us-east-1.amazonaws.com/finpay-api:latest
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
   deploy-dev:
+    permissions:
+      id-token: write
+      contents: read
+
     name: Deploy to Dev
+    permissions:
+      id-token: write
+      contents: read
+
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     needs: push
+    permissions:
+      id-token: write
+      contents: read
+
     if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+      contents: read
+
     environment:
+    permissions:
+      id-token: write
+      contents: read
+
       name: dev
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
+    permissions:
+      id-token: write
+      contents: read
+
       - name: Checkout GitOps repo
+    permissions:
+      id-token: write
+      contents: read
+
         uses: actions/checkout@v4
+    permissions:
+      id-token: write
+      contents: read
+
         with:
+    permissions:
+      id-token: write
+      contents: read
+
           repository: devopschroniclesGit/finpay-gitops
+    permissions:
+      id-token: write
+      contents: read
+
           token: ${{ secrets.GITOPS_PAT }}
+    permissions:
+      id-token: write
+      contents: read
+
           path: gitops
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Install kustomize
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           curl -sL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+    permissions:
+      id-token: write
+      contents: read
+
           sudo mv kustomize /usr/local/bin/
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Update image tag in dev overlay
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           cd gitops/apps/finpay-api/overlays/dev
+    permissions:
+      id-token: write
+      contents: read
+
           kustomize edit set image \
+    permissions:
+      id-token: write
+      contents: read
+
             REGISTRY/finpay-api=623155450632.dkr.ecr.us-east-1.amazonaws.com/finpay-api:${{ needs.push.outputs.image-tag }}
+    permissions:
+      id-token: write
+      contents: read
+
+
+    permissions:
+      id-token: write
+      contents: read
 
       - name: Commit and push to GitOps repo
+    permissions:
+      id-token: write
+      contents: read
+
         run: |
+    permissions:
+      id-token: write
+      contents: read
+
           cd gitops
+    permissions:
+      id-token: write
+      contents: read
+
           git config user.name  "finpay-ci-bot"
+    permissions:
+      id-token: write
+      contents: read
+
           git config user.email "ci@finpay.io"
+    permissions:
+      id-token: write
+      contents: read
+
           git add apps/finpay-api/overlays/dev/kustomization.yaml
+    permissions:
+      id-token: write
+      contents: read
+
           git commit -m "chore(dev): bump finpay-api to ${{ needs.push.outputs.image-tag }}"
+    permissions:
+      id-token: write
+      contents: read
+
           git push
